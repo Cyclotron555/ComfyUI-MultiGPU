@@ -6,7 +6,7 @@ All node override/wrapper generation functions consolidated in one location
 import copy
 import hashlib
 import logging
-from .device_utils import get_device_list
+from .device_utils import get_device_list, get_default_device
 
 logger = logging.getLogger("MultiGPU")
 
@@ -24,7 +24,7 @@ def _create_distorch_safetensor_v2_override(cls, device_param_name, device_sette
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
 
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"][device_param_name] = (devices, {"default": default_device})
@@ -179,7 +179,7 @@ def override_class_with_distorch_gguf(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             inputs["optional"]["virtual_vram_gb"] = ("FLOAT", {"default": 4.0, "min": 0.0, "max": 24.0, "step": 0.1})
@@ -247,7 +247,7 @@ def override_class_with_distorch_gguf_v2(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            compute_device = devices[1] if len(devices) > 1 else devices[0]
+            compute_device = get_default_device()
 
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["compute_device"] = (devices, {"default": compute_device})
@@ -312,7 +312,7 @@ def override_class_with_distorch_clip(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             inputs["optional"]["virtual_vram_gb"] = ("FLOAT", {"default": 4.0, "min": 0.0, "max": 24.0, "step": 0.1})
@@ -379,7 +379,7 @@ def override_class_with_distorch_clip_no_device(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             inputs["optional"]["virtual_vram_gb"] = ("FLOAT", {"default": 4.0, "min": 0.0, "max": 24.0, "step": 0.1})
@@ -453,7 +453,7 @@ def override_class(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             return inputs
@@ -490,7 +490,7 @@ def override_class_offload(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             inputs["optional"]["offload_device"] = (devices, {"default": "cpu"})
@@ -529,7 +529,7 @@ def override_class_clip(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             return inputs
@@ -563,7 +563,7 @@ def override_class_clip_no_device(cls):
         def INPUT_TYPES(s):
             inputs = copy.deepcopy(cls.INPUT_TYPES())
             devices = get_device_list()
-            default_device = devices[1] if len(devices) > 1 else devices[0]
+            default_device = get_default_device()
             inputs["optional"] = inputs.get("optional", {})
             inputs["optional"]["device"] = (devices, {"default": default_device})
             return inputs

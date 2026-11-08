@@ -4,6 +4,7 @@ import psutil
 import comfy.model_management as mm
 import gc
 import importlib
+from .hardware_profile import primary_device
 
 logger = logging.getLogger("MultiGPU")
 
@@ -300,3 +301,7 @@ def comfyui_memory_load(tag):
             segments.append(f"{dev_str}={used_gib:.2f}/{total_gib:.2f}")
 
     return "|".join(segments)
+
+
+def get_default_device():
+    return primary_device(get_device_list(), mm.get_torch_device())

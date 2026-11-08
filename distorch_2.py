@@ -6,12 +6,15 @@ Contains all safetensor related code for distributed memory management
 import torch
 import logging
 import re
+import os
+import math
 from collections import defaultdict
 
 logger = logging.getLogger("MultiGPU")
 import comfy.model_management as mm
 import comfy.model_patcher
 from .device_utils import get_device_list
+from .hardware_profile import memory_budget
 from .model_management_mgpu import multigpu_memory_log
 
 
@@ -366,7 +369,7 @@ def analyze_safetensor_loading(model_patcher, allocations_string, is_clip=False)
     else:
         distorch_alloc = allocations_string
 
-    compute_device = virtual_vram_str.split(';')[0] if virtual_vram_str else "cuda:0"
+    compute_device = virtual_vram_str.split(';')[0] if virtual_vram_str else str(model_patcher.load_device)
     logger.debug(f"[MultiGPU DisTorch V2] Compute Device: {compute_device}")
 
     if not distorch_alloc:
@@ -522,6 +525,18 @@ def analyze_safetensor_loading(model_patcher, allocations_string, is_clip=False)
     if tiny_block_list:
         for block_name, module, block_type, block_memory in tiny_block_list:
             block_assignments[block_name] = compute_device
+
+    if os.environ.get("MGPU_SAFE_OFFLOAD") == "1":
+        assigned_bytes = defaultdict(int)
+        for name, module, block_type, size in all_blocks:
+            assigned_bytes[str(block_assignments[name])] += size
+        for device, size in assigned_bytes.items():
+            budget = memory_budget(device, mm.get_total_memory(torch.device(device)),
+                                   mm.get_free_memory(torch.device(device)))
+            if size > budget:
+                raise ValueError(f"DisTorch2 assignment to {device} needs {size / 1024**3:.2f} GiB, "
+                                 f"safe budget is {budget / 1024**3:.2f} GiB; increase virtual VRAM "
+                                 "or use CPU offload")
 
     # Populate device_assignments from the final block_assignments
     for block_name, device in block_assignments.items():
@@ -705,6 +720,8 @@ def calculate_safetensor_vvram_allocation(model_patcher, virtual_vram_str):
     """Calculate virtual VRAM allocation string for distributed safetensor loading"""
     recipient_device, vram_amount, donors = virtual_vram_str.split(';')
     virtual_vram_gb = float(vram_amount)
+    if not math.isfinite(virtual_vram_gb) or virtual_vram_gb < 0:
+        raise ValueError("virtual_vram_gb must be finite and nonnegative")
 
     eq_line = "=" * 47
     dash_line = "-" * 47
@@ -723,7 +740,13 @@ def calculate_safetensor_vvram_allocation(model_patcher, virtual_vram_str):
     logger.info(fmt_assign.format(recipient_device, 'recip', f"{recipient_vram:.2f}GB",f"{recipient_virtual:.2f}GB", f"+{virtual_vram_gb:.2f}GB"))
 
     # Handle donor devices
-    ram_donors = list(donors.split(','))
+    ram_donors = list(dict.fromkeys(d.strip() for d in donors.split(',') if d.strip()))
+    if recipient_device in ram_donors:
+        raise ValueError("Compute device cannot also be a donor")
+    if os.environ.get("MGPU_SAFE_OFFLOAD") == "1" and "cpu" not in ram_donors:
+        ram_donors.append("cpu")
+    if any(d not in get_device_list() for d in [recipient_device] + ram_donors):
+        raise ValueError("Allocation references an unavailable device")
     remaining_vram_needed = virtual_vram_gb
 
     donor_device_info = {}
@@ -731,7 +754,8 @@ def calculate_safetensor_vvram_allocation(model_patcher, virtual_vram_str):
 
     for donor in ram_donors:
         donor_vram = mm.get_total_memory(torch.device(donor)) / (1024**3)
-        max_donor_capacity = donor_vram
+        max_donor_capacity = memory_budget(donor, donor_vram * 1024**3,
+                                          mm.get_free_memory(torch.device(donor))) / 1024**3
 
         donation = min(remaining_vram_needed, max_donor_capacity)
         donor_virtual = donor_vram - donation
@@ -741,6 +765,9 @@ def calculate_safetensor_vvram_allocation(model_patcher, virtual_vram_str):
         donor_device_info[donor] = (donor_vram, donor_virtual)
         logger.info(fmt_assign.format(donor, 'donor', f"{donor_vram:.2f}GB",  f"{donor_virtual:.2f}GB", f"-{donation:.2f}GB"))
 
+
+    if remaining_vram_needed > 1e-6:
+        raise ValueError("Insufficient donor capacity; reduce offload or free memory")
 
     logger.info(dash_line)
 

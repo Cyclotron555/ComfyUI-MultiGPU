@@ -5,7 +5,7 @@ import copy
 import folder_paths
 import comfy.model_management as mm
 from nodes import NODE_CLASS_MAPPINGS
-from .device_utils import get_device_list
+from .device_utils import get_device_list, get_default_device
 
 logger = logging.getLogger("MultiGPU")
 
@@ -31,7 +31,7 @@ class WanVideoModelLoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (folder_paths.get_filename_list("unet_gguf") + folder_paths.get_filename_list("diffusion_models"), {"tooltip": "These models are loaded from the 'ComfyUI/models/diffusion_models' -folder",}),
@@ -223,7 +223,7 @@ class LoadWanVideoT5TextEncoder:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model_name": (folder_paths.get_filename_list("text_encoders"), {"tooltip": "These models are loaded from 'ComfyUI/models/text_encoders'"}),
@@ -262,7 +262,7 @@ class LoadWanVideoClipTextEncoder:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model_name": (folder_paths.get_filename_list("clip_vision") + folder_paths.get_filename_list("text_encoders"), {"tooltip": "These models are loaded from 'ComfyUI/models/clip_vision'"}),
@@ -300,7 +300,7 @@ class WanVideoTextEncodeCached:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model_name": (folder_paths.get_filename_list("text_encoders"), {"tooltip": "These models are loaded from 'ComfyUI/models/text_encoders'"}),
@@ -381,7 +381,7 @@ class WanVideoVAELoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model_name": (folder_paths.get_filename_list("vae"), {"tooltip": "These models are loaded from 'ComfyUI/models/vae'"}),
@@ -415,7 +415,7 @@ class WanVideoTinyVAELoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model_name": (folder_paths.get_filename_list("vae_approx"), {"tooltip": "These models are loaded from 'ComfyUI/models/vae_approx'"}),
@@ -714,7 +714,7 @@ class WanVideoControlnetLoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (folder_paths.get_filename_list("controlnet"), {"tooltip": "These models are loaded from the 'ComfyUI/models/controlnet' -folder",}),
@@ -743,7 +743,7 @@ class FantasyTalkingModelLoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (folder_paths.get_filename_list("diffusion_models"), {"tooltip": "These models are loaded from the 'ComfyUI/models/diffusion_models' -folder",}),
@@ -770,7 +770,7 @@ class Wav2VecModelLoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (folder_paths.get_filename_list("wav2vec2"), {"tooltip": "These models are loaded from the 'ComfyUI/models/wav2vec2' -folder",}),
@@ -798,7 +798,7 @@ class DownloadAndLoadWav2VecModel:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (
@@ -831,7 +831,7 @@ class WanVideoUni3C_ControlnetLoader:
     @classmethod
     def INPUT_TYPES(s):
         devices = get_device_list()
-        default_device = devices[1] if len(devices) > 1 else devices[0]
+        default_device = get_default_device()
         return {
             "required": {
                 "model": (folder_paths.get_filename_list("controlnet"), {"tooltip": "These models are loaded from the 'ComfyUI/models/controlnet' -folder",}),
