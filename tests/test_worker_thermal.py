@@ -32,6 +32,15 @@ class ThermalTests(unittest.TestCase):
         self.assertEqual(pacer.cooling_seconds, 0.5)
         self.assertEqual(pacer.maximum_observed_c, 76)
 
+    def test_explicit_77c_worker_pilot_keeps_cutoff_and_waits_to_72c(self):
+        pacer = self.pacer([76, 77, 77, 73, 72], pause_at=77, resume_at=72)
+        pacer.check()
+        self.drain.assert_not_called()
+        pacer.check()
+        self.drain.assert_called_once()
+        self.assertEqual(pacer.cooling_seconds, 0.5)
+        self.assertEqual(pacer.cutoff, 82)
+
     def test_cutoff_before_or_after_drain_stops_worker(self):
         for values in [[82], [75, 82]]:
             with self.subTest(values=values), self.assertRaisesRegex(RuntimeError, 'cutoff'):

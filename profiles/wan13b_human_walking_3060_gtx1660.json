@@ -9,30 +9,38 @@
   "sampler": "uni_pc",
   "scheduler": "simple",
   "steps": 30,
-  "cfg": 5.0,
+  "cfg": 6,
   "shift": 8.0,
   "fps": 16,
   "thermal_worker": {
-    "pause_at": 75,
-    "resume_at": 67,
+    "pause_at": 77,
+    "resume_at": 72,
     "cutoff": 82,
     "poll_seconds": 0.25,
     "timeout_seconds": 120,
     "telemetry_backend": "nvml"
   },
-  "note": "Explicit UUID mapping required: RTX3060 compute/display, GTX1660 optional weight donor. Native Wan1.3B; no step cache, interpolation, upscaling or reduced step count. Recipe only: loading this JSON does not alter fans/power or create a ComfyUI workflow. NVML temperature backend is opt-in and fails closed on unavailable/failed telemetry. Extended161-frame motion quality must be visually reviewed.",
-  "prompt": "A realistic full-body video of an adult man wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a park path. Steady side-on camera, his head and both feet remain visible, natural alternating steps and arm swing, soft daylight, realistic proportions, smooth continuous movement.",
-  "negative_prompt": "blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+  "note": "Explicit UUID mapping required: RTX3060 compute/display, GTX1660 optional weight donor. Native Wan1.3B; no step cache, interpolation, upscaling or reduced step count. Recipe only: loading this JSON does not alter fans/power or create a ComfyUI workflow. NVML temperature backend is opt-in and fails closed on unavailable/failed telemetry. Extended161-frame motion quality must be visually reviewed. Software77/72C pilot is explicitly opt-in; general default75/67C is unchanged. Short anime style preview was visually successful but lacked walking; motion-first prompt is being validated, and the intended161-frame final has not completed.",
+  "prompt": "A young adult man is WALKING briskly to the right along a park path, taking continuous visible steps. His left and right legs alternate, knees bend, each foot lifts then lands ahead, and his arms swing naturally with every step. Side-view tracking camera follows his walking movement. Japanese hand-drawn 2D anime animation, blue jacket and beige trousers, crisp outlines, cel shading, softly painted green trees, fluid character animation.",
+  "negative_prompt": "standing still, static pose, frozen body, still image, photorealistic, live action, 3D render, blurry, distorted anatomy, extra limbs, text, watermark",
   "width": 832,
   "height": 480,
   "frames": 161,
-  "seed": 30601660,
+  "seed": 30601661,
   "temporary_cooling_experiment": {
     "watts": 130,
-    "fan_percent": 75,
+    "fan_percent": 90,
     "maximum_seconds": 7200,
     "restore": "Original power limit and automatic fan policy",
     "requires_explicit_administrator_run": true,
-    "automatic_on_profile_load": false
+    "automatic_on_profile_load": false,
+    "helper_abort_c": 80
+  },
+  "style": "Japanese hand-drawn 2D anime",
+  "thermal_vae_worker": {
+    "pause_at": 75,
+    "resume_at": 67,
+    "cutoff": 82,
+    "telemetry_backend": "nvml"
   }
 }

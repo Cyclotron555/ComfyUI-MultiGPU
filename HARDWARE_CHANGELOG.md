@@ -302,3 +302,55 @@ Pre-render setup adjustment: automatic fan-stop at idle held RTX51–52C, so a50
 2026-11-08T17:09:28.487002-06:00 START walking-baseline
 
 Cooling code validation:41 CPU-only tests pass, including UUID mismatch/fork/query-error handling, no driver initialization at import, no fan writes during planning, refusing existing manual policy or lowering automatic target, restoring both fans after partial setter failure,80C stop, and integrated interrupt restoring fans+170W and signaling controller abort. Added explicit NVML backend (SMI remains default), read-only telemetry benchmark, opt-in temporary fan flags and walking recipe. Actual100-query read-only probe: NVML1.81us/query vsSMI37.31ms/query. End-to-end benefit is not yet established. Existing encode weights used locally on CPU;145.05s to encode walking prompt, no download.
+
+2026-11-08T17:16:18.525682-06:00 PASS walking-baseline: {"sample_seconds": 318.9209313319989, "cooling_seconds": 47.54633017899687, "decode_seconds": 77.63631539400012, "maximum_guard_temperature_c": 75}
+
+2026-11-08T17:16:53.646938-06:00 START walking-cooled
+
+User steering: render the final walking clip in Japanese cartoon/anime style. Keep the already-running matched photorealistic53-frame comparison unchanged for valid cooling/quality evidence. Updated only the pending161-frame final prompt to hand-drawn2D anime, cel shading, painted park background, one blue-jacket adult walking side-on. Added fresh CPU-only/offline text encoding before the final sampler; no stale photorealistic embeddings, new downloads, model change, reduced steps, upscaling or interpolation. Updated public recipe draft; will publish with completed results.
+
+Interim75percent trial still required frequent75C-to67C cooling. Do not assume faster temperature reads improve end-to-end speed: removing CPU query gaps increases sustained GPU load and heat. Prepare a90percent temporary-fan trial, same130W, sameguard and exactsame53-frame walking comparison. Preserve75percent trial including any negative result; reuse original baseline, explicitly note sequential/ambient/foreground confounding. The pending161-frame final is now Japanese2D anime walking; fresh CPU encoding precedes sampling.
+
+2026-11-08T17:24:23.690342-06:00 PASS walking-cooled: {"sample_seconds": 355.99309719899975, "cooling_seconds": 97.79741685300178, "decode_seconds": 80.07992394800021, "maximum_guard_temperature_c": 75}
+
+2026-11-08T17:24:23.765638-06:00 Matched walking quality check: {"latents_file_identical": true, "frames_compared": 53, "all_png_bytes_identical": true, "mp4_bytes_identical": true}
+
+2026-11-08T17:24:23.766188-06:00 Cooling/walking controller stopped: RuntimeError('No matched sampling speed improvement; skipping long render for review')
+
+Completed75percent trial: baseline318.9209s sampling/47.5463s cooling;75percent+NVML355.9931s sampling/97.7974s cooling (11.62% slower). Latents, all53 PNG bytes and MP4 bytes exactly identical. Controller correctly rejected a slower candidate and skipped its long render. Verified helper exited0 after restoring automatic fans and170W. Initiated90percent follow-up with same130W, originalguard and reused baseline. Negative result preserved.
+
+2026-11-08T17:25:06.891932-06:00 Reused completed53-frame walking baseline318.92s, rather than repeating an identical expensive render;90percent fan candidate uses same prompt/seed/settings. Original75percent trial preserved separately.
+
+2026-11-08T17:25:15.499607-06:00 START walking-cooled-90
+
+2026-11-08T17:31:57.549149-06:00 PASS walking-cooled-90: {"sample_seconds": 315.6574740830001, "cooling_seconds": 57.27650631000688, "decode_seconds": 72.71613912000066, "maximum_guard_temperature_c": 75}
+
+2026-11-08T17:31:57.625574-06:00 Matched walking quality check: {"latents_file_identical": true, "frames_compared": 53, "all_png_bytes_identical": true, "mp4_bytes_identical": true}
+
+2026-11-08T17:32:36.749672-06:00 START walking-anime-ten-seconds
+
+90percent/75C trial completed315.6575s sampling57.2765s cooling versus baseline318.9209/47.5463. Matched latents, all53 PNGs and MP4 remain identical. Nominal1.02% sampling-time reduction is too small for a reliable performance claim. Prepare a bounded77C pause/72C resume pilot, preserving82C worker cutoff and stricter80C privileged-helper abort. Manufacturer reports83C target,93C max-operating; no hardware temperature/driver limit is changed. Final anime sampler explicitly waits for this pilot and exact-output validation; only local CPU prompt encoding overlaps, never two GPU render workers. Pilot keeps53 frames,30steps,allmathsettings,seed/prompt identical. VAE remains at75C/67C. Record CPU-encoding overlap as timing confound.
+
+2026-11-08T17:33:59.228446-06:00 Cooling/walking controller stopped: RuntimeError('Cooling experiment stopped: []')
+
+Sequencing correction: the previous final had already begun loading its sampler when the planned pilot gate was written, so stopped that owned controller before launching any pilot. No simultaneous GPU render workers were started. Its completed anime CPU embeddings are preserved and reused (freshly encoded from anime prompt). The90percent helper exited0 and restored automatic fans+170W. A new isolated77C pilot controller will run53-frame validation then the161-frame anime render sequentially; final sampler waits on explicit validation gate. Skip redundant CPU re-encoding and record every attempt.
+
+2026-11-08T17:34:55.264090-06:00 Reused completed53-frame walking baseline318.92s, rather than repeating an identical expensive render;90percent fan candidate uses same prompt/seed/settings. Original75percent trial preserved separately.
+
+2026-11-08T17:35:03.882744-06:00 START walking-cooled-77
+
+User explicitly asked to see anime, not the already-completed realistic walking clip. Prepared a clearly labeled short style preview:512x288,33frames16fps,20steps, same anime prompt and existing model/embeddings. The full10s remains832x480,161frames,30steps. Added an explicit pre-Torch gate to the unstarted10s sampler so the style preview runs alone after the77C validation. No concurrent GPU generation. Audio has not yet been created or mixed; planned as a separate light-foley/ambience pass once walking motion is validated.
+
+2026-11-08T17:41:17.919069-06:00 PASS walking-cooled-77: {"sample_seconds": 280.030340936999, "cooling_seconds": 19.25869421099742, "decode_seconds": 82.57794253800057, "maximum_guard_temperature_c": 77}
+
+2026-11-08T17:41:17.963144-06:00 Matched walking quality check: {"latents_file_identical": true, "frames_compared": 53, "all_png_bytes_identical": true, "mp4_bytes_identical": true}
+
+2026-11-08T17:41:59.108547-06:00 START walking-anime-ten-seconds-77
+
+2026-11-08T17:44:13.637045-06:00 Cooling/walking controller stopped: RuntimeError('Cooling experiment stopped: []')
+
+Anime preview1 complete512x288,33frames20steps: visual inspection confirms2D anime style but character stands rather than walks. Rejected as walking deliverable; shown honestly as style preview. Stopped owned10s render rather than spend a long generation on that prompt. Verified90percent helper restored automatic fans+170W and exited0; no GPU render remains. New lightweight49-frame512x288 motion-first anime preview uses30steps,CFG6/shift8 (official Wan1.3B reference CFG6/shift8), explicit alternating steps/arm swing, negative standing/static, newseed30601661. Fresh local CPU encode, then one GPU renderer at original170W automaticfans with unchanged75/67/82C worker safeguards. No temporary administrator helper needed for this small preview. Cooling77C test already passed with all53PNG/latent/MP4 bytes identical: sampling280.0303s vs318.9209 (-12.20% time), cooling19.2587s vs47.5463 (-59.49% wait). Full10s not completed yet; do not represent preview as a finished long video.
+
+Motion-preview startup corrected before GPU work: use absolute control/module paths rather than job-relative working-directory paths. Preserved the interrupted CPU-encode startup logs separately; GPU memory remains at desktop baseline.
+
+Cooling measurements finalized:77/72C worker pilot at130W/90percentfan reduced sampling318.9209→280.0303s (-12.1944%), cooling47.5463→19.2587s (-59.4949%), measured stages -8.4666%. All candidate latents/53PNG/MP4bytes match reference exactly.42 CPU tests pass. Independent readback170W and both RTX fan policiesautomatic0. All temporary helpers exited successfully; currently only local motion-preview work runs under original power/fans and75/67/82C guard. No full10s anime completed; first style preview rejected for insufficient motion. New motion-first prompt/CFG6 shift8 usesofficialWanexample guidance; no newweights.

@@ -128,7 +128,7 @@ Run it while no video render is active. Its 75°C stop is intentionally below th
 
 ## Validation and rollback
 
-CPU-only tests: `python -m unittest discover -s tests -v` (30 passed). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling, restoring the original power cap on completion/interruption and a read-only long-render plan. Actual finite-tensor/MP4 and visual checks complement those tests.
+CPU-only tests: `python -m unittest discover -s tests -v` (42 passed, including the cooling additions). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling, restoring the original power cap on completion/interruption and a read-only long-render plan. Actual finite-tensor/MP4 and visual checks complement those tests.
 
 Remove `--wan-performance` to restore the prior launch flags. Select PyTorch attention and remove/bypass EasyCache to restore baseline model patches. Original FP32 weights and earlier videos remain separate. This work does not fix or retest the known NVIDIA suspend/resume issue.
 
@@ -180,3 +180,23 @@ An optional `--fan-start-file /absolute/path/FAN_ON` leaves automatic fan contro
 See the [walking-human recipe](profiles/wan13b_human_walking_3060_gtx1660.json). Exact latent and PNG comparisons, not unchanged recipe settings alone, are required before claiming output preservation. A single matched pair remains sensitive to foreground desktop activity and starting temperature.
 
 Primary references: [NVIDIA NVML device queries](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceQueries.html), [initialization and cleanup](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlInitializationAndCleanup.html), and [temporary fan control and restoring defaults](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceCommands.html).
+
+
+## Measured cooling results on this RTX3060
+
+All four53-frame832×480 runs used the same walking prompt,seed,30UniPC/simple steps,CFG5/shift8,BF16 transformer,FP32 VAE,nativeINT8 attention,cache off and0.25GiB GTX donor. Power was temporarily130W for every comparison.
+
+| Worker temperature reader / pause-resume | RTX fan policy | Sampling seconds | Cooling wait seconds |
+| --- | --- | ---: | ---: |
+| SMI /75–67°C reference | Automatic |318.92|47.55|
+| NVML /75–67°C |75% temporary |355.99|97.80|
+| NVML /75–67°C |90% temporary |315.66|57.28|
+| NVML /77–72°C pilot |90% temporary |280.03|19.26|
+
+The last pilot reduced sampling time by **12.19%**, cooling waits by **59.49%**, and measured sampling-plus-decode stage wall time by **8.47%**. Latent files, **all53PNG frames and MP4 bytes were identical** to the reference for every candidate. The75% fan candidate was slower and rejected. The old75°C guard plus90% fan result changed by only about1%, too small for a reliable performance claim. Reducing query latency alone does not guarantee faster generation: eliminating CPU gaps increases sustained GPU load and can create additional cooling waits.
+
+The successful pilot changes only the worker's software pause/resume points to77/72°C. The extension default remains75/67°C. The worker82°C cutoff, independent helper80°C abort, desktop VRAM reserve and RAM/donor guards remain active; VAE decoding still uses75/67°C. The local driver reports an83°C target and93°C maximum operating temperature; no NVIDIA temperature limit is changed. The monitored pilot reached77°C and completed finite sampling/decoding. Both fans were independently verified back in automatic mode and the RTX back at170W afterward.
+
+This is one sequential pair per candidate, with possible differences in initial temperature,desktop activity and case airflow. The result is for combined fan,telemetry and pacing changes on this hardware, not an isolated fan effect, universal speedup or proof of long-run stability. No suspend/resume or driver changes were tested. See [full measurements, negative results and restoration readback](benchmarks/results/rtx3060-cooling-walking.json).42CPU-only tests passed, including explicit77/72°C pacing and unchanged82°C cutoff.
+
+The anime recipe is a separate creative test. Its motion-first prompt andCFG6/shift8 follow the [official Wan1.3B example](https://github.com/Wan-Video/Wan2.1/blob/main/README.md), with30sampling steps retained for the intended final render. The first short anime style preview achieved the2D look but insufficient walking motion; it is not a completed10-second walking result. Motion is reviewed before continuing a costly longer shot. No new weights or approximation cache were introduced.

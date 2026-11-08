@@ -1,0 +1,486 @@
+{
+  "status": "Cooling experiments complete; anime walking motion development continues separately",
+  "primary": "RTX3060 12GB PCI06:00.0 display/compute",
+  "donor": "GTX1660 6GB PCI05:00.0 weight storage, not parallel denoising",
+  "runs": {
+    "baseline_auto_smi75": {
+      "sampling": {
+        "settings": {
+          "prompt": "A realistic full-body video of an adult man wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a park path. Steady side-on camera, his head and both feet remain visible, natural alternating steps and arm swing, soft daylight, realistic proportions, smooth continuous movement.",
+          "negative_prompt": "blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+          "width": 832,
+          "height": 480,
+          "frames": 53,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 5.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 130,
+          "telemetry_backend": "smi"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 318.9209313319989,
+        "latent_shape": [
+          1,
+          16,
+          14,
+          60,
+          104
+        ],
+        "finite": true,
+        "cooling_seconds": 47.54633017899687,
+        "thermal_pauses": 23,
+        "maximum_guard_temperature_c": 75,
+        "telemetry_backend": "smi",
+        "peak_allocated_bytes": 4910302208
+      },
+      "decode": {
+        "seconds": 77.63631539400012,
+        "frames": 53,
+        "shape": [
+          53,
+          480,
+          832,
+          3
+        ],
+        "finite": true,
+        "frame_std": 49.09391801436019,
+        "mean_frame_change": 8.96844701522436,
+        "peak_gpu_bytes": 2261696512,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 15.175305720000324
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 327.14094866600135,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 81.31440835099966,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 46
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 6167,
+          "temperature_c": 75
+        }
+      },
+      "minimum_available_ram_gib": 51.39408493041992,
+      "stage_wall_seconds": 408.455357017001
+    },
+    "fan75_nvml75": {
+      "sampling": {
+        "settings": {
+          "prompt": "A realistic full-body video of an adult man wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a park path. Steady side-on camera, his head and both feet remain visible, natural alternating steps and arm swing, soft daylight, realistic proportions, smooth continuous movement.",
+          "negative_prompt": "blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+          "width": 832,
+          "height": 480,
+          "frames": 53,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 5.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 130,
+          "telemetry_backend": "nvml"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 355.99309719899975,
+        "latent_shape": [
+          1,
+          16,
+          14,
+          60,
+          104
+        ],
+        "finite": true,
+        "cooling_seconds": 97.79741685300178,
+        "thermal_pauses": 42,
+        "maximum_guard_temperature_c": 75,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4910302208
+      },
+      "decode": {
+        "seconds": 80.07992394800021,
+        "frames": 53,
+        "shape": [
+          53,
+          480,
+          832,
+          3
+        ],
+        "finite": true,
+        "frame_std": 49.09391801436019,
+        "mean_frame_change": 8.96844701522436,
+        "peak_gpu_bytes": 2261696512,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 24.26246433999404
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 365.6849655299993,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 83.39611386400065,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 49
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 6211,
+          "temperature_c": 75
+        }
+      },
+      "minimum_available_ram_gib": 51.26249694824219,
+      "stage_wall_seconds": 449.08107939399997
+    },
+    "fan90_nvml75": {
+      "sampling": {
+        "settings": {
+          "prompt": "A realistic full-body video of an adult man wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a park path. Steady side-on camera, his head and both feet remain visible, natural alternating steps and arm swing, soft daylight, realistic proportions, smooth continuous movement.",
+          "negative_prompt": "blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+          "width": 832,
+          "height": 480,
+          "frames": 53,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 5.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 130,
+          "telemetry_backend": "nvml",
+          "temporary_fan_percent": 90
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 315.6574740830001,
+        "latent_shape": [
+          1,
+          16,
+          14,
+          60,
+          104
+        ],
+        "finite": true,
+        "cooling_seconds": 57.27650631000688,
+        "thermal_pauses": 26,
+        "maximum_guard_temperature_c": 75,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4910302208
+      },
+      "decode": {
+        "seconds": 72.71613912000066,
+        "frames": 53,
+        "shape": [
+          53,
+          480,
+          832,
+          3
+        ],
+        "finite": true,
+        "frame_std": 49.09391801436019,
+        "mean_frame_change": 8.96844701522436,
+        "peak_gpu_bytes": 2261696512,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 16.507697884000663
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 324.99011603000145,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 75.24779308899997,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 50
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 6201,
+          "temperature_c": 75
+        }
+      },
+      "minimum_available_ram_gib": 50.69979476928711,
+      "stage_wall_seconds": 400.2379091190014
+    },
+    "fan90_nvml77": {
+      "sampling": {
+        "settings": {
+          "prompt": "A realistic full-body video of an adult man wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a park path. Steady side-on camera, his head and both feet remain visible, natural alternating steps and arm swing, soft daylight, realistic proportions, smooth continuous movement.",
+          "negative_prompt": "blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+          "width": 832,
+          "height": 480,
+          "frames": 53,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 5.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 130,
+          "telemetry_backend": "nvml",
+          "temporary_fan_percent": 90,
+          "thermal_pause_at": 77,
+          "thermal_resume_at": 72
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 280.030340936999,
+        "latent_shape": [
+          1,
+          16,
+          14,
+          60,
+          104
+        ],
+        "finite": true,
+        "cooling_seconds": 19.25869421099742,
+        "thermal_pauses": 30,
+        "maximum_guard_temperature_c": 77,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4910302208
+      },
+      "decode": {
+        "seconds": 82.57794253800057,
+        "frames": 53,
+        "shape": [
+          53,
+          480,
+          832,
+          3
+        ],
+        "finite": true,
+        "frame_std": 49.09391801436019,
+        "mean_frame_change": 8.96844701522436,
+        "peak_gpu_bytes": 2261696512,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 26.512197075004224
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 288.45633710699985,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 85.41664892599874,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 50
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 6198,
+          "temperature_c": 77
+        }
+      },
+      "minimum_available_ram_gib": 51.006465911865234,
+      "stage_wall_seconds": 373.8729860329986
+    }
+  },
+  "quality_checks": {
+    "fan75_nvml75": {
+      "latents_file_identical": true,
+      "frames_compared": 53,
+      "all_png_bytes_identical": true,
+      "mp4_bytes_identical": true
+    },
+    "fan90_nvml75": {
+      "latents_file_identical": true,
+      "frames_compared": 53,
+      "all_png_bytes_identical": true,
+      "mp4_bytes_identical": true
+    },
+    "fan90_nvml77": {
+      "latents_file_identical": true,
+      "frames_compared": 53,
+      "all_png_bytes_identical": true,
+      "mp4_bytes_identical": true
+    }
+  },
+  "sampling_time_reduction_percent": 12.194430209572705,
+  "sampling_speedup": 1.138879916600714,
+  "cooling_wait_reduction_percent": 59.49488816803623,
+  "stage_wall_time_reduction_percent": 8.466621967345866,
+  "restoration_independent_readback": {
+    "power_limit_watts": 170.0,
+    "fan_policies": [
+      0,
+      0
+    ],
+    "automatic_policy_value": 0
+  },
+  "cpu_tests_passed": 42,
+  "scope": [
+    "One sequential53-frame832x480 matched pair per candidate; not randomized or repeated.",
+    "Same prompt/seed,30UniPC/simple steps,CFG5,shift8,BF16 UNet/FP32 VAE,nativeKitchenINT8,cacheoff,0.25GiB donor.",
+    "Final77C worker-pause pilot retains82C worker cutoff and stricter80C helper abort; VAE remains75/67C. No hardware temperature limits changed.",
+    "Fan75 plus NVML was slower; fan90 with old75C guard had only~1%nominal change, not meaningful evidence alone.",
+    "Combined fan/telemetry/software-pacing change preserves identical latents,all53PNGbytes,MP4 in matched tests. Does not guarantee identical quality on other models/backends.",
+    "Defaultpacer remains75/67C SMI. Newrecipe is opt-in and hardware-specific.",
+    "Temporary130W/90percentfans restored to170W/automatic. No persistent system,driver,display,clock or suspend changes.",
+    "Anime style preview achieved2D look but insufficient walking motion; stopped long attempt, preserved originals; new motion-first preview pending. No10second anime deliverable complete yet."
+  ]
+}
