@@ -1,5 +1,8 @@
 import importlib.util
+import io
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -47,6 +50,22 @@ class PowerTests(unittest.TestCase):
         with patch.object(power.subprocess, 'check_output', return_value=line):
             with self.assertRaisesRegex(ValueError, 'exact'):
                 power.query('GPU-primary')
+
+    def test_invalid_cli_duration_fails_before_hardware_query(self):
+        for duration in [0, 7201]:
+            args = ['power-test', '--primary', 'GPU-primary', '--seconds', str(duration), '--stop-file', '/tmp/not-used-by-test']
+            with patch('sys.argv', args), patch.object(power, 'query') as read, redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    power.main()
+                read.assert_not_called()
+
+    def test_long_render_dry_run_never_writes_power_limit(self):
+        read, _ = self.scenario()
+        with tempfile.TemporaryDirectory() as directory:
+            args = ['power-test', '--primary', 'GPU-primary', '--seconds', '7200', '--stop-file', str(Path(directory)/'done')]
+            with patch('sys.argv', args), patch.object(power, 'query', side_effect=read), patch.object(power, 'set_limit') as write, redirect_stdout(io.StringIO()):
+                power.main()
+                write.assert_not_called()
 
 
 if __name__ == '__main__':

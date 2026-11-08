@@ -61,12 +61,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--primary', required=True, help='Exact RTX 3060 UUID')
     parser.add_argument('--watts', type=int, default=130)
-    parser.add_argument('--seconds', type=int, default=900, help='Bounded duration, 1–1800 seconds')
+    parser.add_argument('--seconds', type=int, default=900, help='Bounded duration, 1–7200 seconds; choose explicitly for long renders')
     parser.add_argument('--stop-file', type=Path, required=True, help='Existence ends the experiment and restores the cap')
     parser.add_argument('--run', action='store_true')
     args = parser.parse_args()
-    if not args.primary.startswith('GPU-') or not 1 <= args.seconds <= 1800:
-        parser.error('Use an exact GPU UUID and duration between 1 and 1800 seconds')
+    if not args.primary.startswith('GPU-') or not 1 <= args.seconds <= 7200:
+        parser.error('Use an exact GPU UUID and duration between 1 and 7200 seconds')
     if args.stop_file.exists():
         parser.error('Stop file already exists; inspect prior experiment before proceeding')
     before = query(args.primary)

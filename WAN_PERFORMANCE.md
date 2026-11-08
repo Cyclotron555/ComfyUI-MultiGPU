@@ -10,6 +10,7 @@ Test machine: RTX 3060 12 GB at PCI `06:00.0` for generation/display, GTX 1660 6
 - `wan_performance.configure_wan`: selects native PyTorch or optional native Comfy Kitchen INT8 attention through a cloned model patcher. Optional native EasyCache is off by default. Unsupported optional components return an explicit fallback report; patching errors propagate. No global attention monkeypatch, new node duplicate, downloads, driver changes or original checkpoint rewriting.
 - `benchmarks/attention_probe.py`: an opt-in, model-free comparison with fixed small shapes, identity verification, memory/temperature checks and recorded numerical differences. A dry run does not import Torch or initialize CUDA.
 - `worker_thermal.ThermalPacer`: optional pacing for an owned experiment worker, with injected compute-stream fence/full-device drain, bounded cool-down, exact GPU UUID telemetry and fail-closed cutoff handling. It is not automatically attached to GUI models and does not replace the outer memory/RAM/process monitor.
+- `benchmarks/watch_render_power.py`: an unprivileged power trace for the comparison controller's atomic JSON state; signals the authenticated helper to restore the original cap on complete/failure or watcher exit. It never runs models or changes a GPU setting itself.
 
 INT8 attention, BF16 compute and caching can change results. Synthetic numerical differences are not video-quality scores. Keep a reproducible baseline and compare actual motion and geometry before choosing an accelerated profile.
 
@@ -99,7 +100,7 @@ Both completed finite sampling and FP32 VAE decoding. Frames show similar compos
 
 `benchmarks/temporary_power_limit.py` is a standalone administrator utility, **not** part of ComfyUI startup or the quality recipe. The user separately approved testing 130 W versus the board's original 170 W limit. Its results are independent of the software-only tables above.
 
-It defaults to a read-only plan. With `--run`, it accepts only a lower cap within the reported hardware limits, verifies the exact RTX 3060 12 GB UUID, and restores the original limit in `finally`, on SIGINT/SIGTERM, or after a bounded timer (default 900 s; maximum 1800 s). Restoration has readback and retries. Model code is never run as root. No fan, manual clock, driver or display changes are made. Forced termination cannot run Python cleanup; verify the actual cap after any interruption.
+It defaults to a read-only plan. With `--run`, it accepts only a lower cap within the reported hardware limits, verifies the exact RTX 3060 12 GB UUID, and restores the original limit in `finally`, on SIGINT/SIGTERM, or after a bounded timer (default 900 s; explicit maximum 7200 s for separately authorized long renders). Restoration has readback and retries. Model code is never run as root. No fan, manual clock, driver or display changes are made. Forced termination cannot run Python cleanup; verify the actual cap after any interruption.
 
 Inspect the helper's dry-run plan first. When explicitly choosing this experiment, authenticate for the isolated system-Python helper only; run the comparison worker normally in another process:
 
@@ -110,6 +111,10 @@ pkexec /usr/bin/python3 -I /absolute/path/benchmarks/temporary_power_limit.py \
 ```
 
 Creating the chosen stop file ends the experiment and restores the original cap. An already-existing stop file is rejected before any write. The NVIDIA [power-limit documentation](https://docs.nvidia.com/deploy/nvidia-smi/) describes its administrator requirement and allowed hardware range. This experiment is not an overclock and is not automatically recommended as faster.
+
+The completed matched 130 W test sampled in 356.61 s versus 421.24 s at 170 W (~15% shorter), with **bit-identical latents, all 53 PNG frames and MP4 bytes**. Stage wall time fell from 528.35 to 452.77 s (~14% shorter). The administrator helper restored 170 W and readback verified it before any adoption decision. This is one matched pair, not a universal power-efficiency claim. See [the power comparison report](benchmarks/results/rtx3060-power-comparison.json).
+
+The user separately authorized using 130 W for the queued videos, with restoration after completion and a two-hour fallback deadline. An independent user-process watcher records actual power settings and signals restoration on controller completion/failure. Its complete/failed-state cleanup paths were exercised without GPU access. Power limits are still not changed automatically by the quality recipe, and the generic watcher requires the comparison controller's documented `status` state rather than arbitrary ComfyUI queue data.
 
 ## Reproduce the small kernel probe
 
@@ -123,7 +128,7 @@ Run it while no video render is active. Its 75°C stop is intentionally below th
 
 ## Validation and rollback
 
-CPU-only tests: `python -m unittest discover -s tests -v` (28 passed). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling and restoring the original power cap on completion/interruption. Actual finite-tensor/MP4 and visual checks complement those tests.
+CPU-only tests: `python -m unittest discover -s tests -v` (30 passed). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling, restoring the original power cap on completion/interruption and a read-only long-render plan. Actual finite-tensor/MP4 and visual checks complement those tests.
 
 Remove `--wan-performance` to restore the prior launch flags. Select PyTorch attention and remove/bypass EasyCache to restore baseline model patches. Original FP32 weights and earlier videos remain separate. This work does not fix or retest the known NVIDIA suspend/resume issue.
 

@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-08",
+  "native_shape": [
+    832,
+    480,
+    53
+  ],
+  "seed": 30601660,
+  "cache_threshold": 0,
+  "both_cards": true,
+  "primary": "RTX3060 12GB",
+  "model": "Wan2.1 T2V1.3B BF16 UNet/FP32 VAE",
+  "baseline_watts": 170,
+  "tested_watts": 130,
+  "allowed_watts": [
+    100,
+    170
+  ],
+  "baseline_sampling_seconds": 421.24184871499983,
+  "tested_sampling_seconds": 356.61331720400085,
+  "baseline_sampling_cooling_seconds": 157.6473136519944,
+  "tested_sampling_cooling_seconds": 85.61303131500154,
+  "baseline_stage_wall_seconds": 528.3496805210007,
+  "tested_stage_wall_seconds": 452.7676127780005,
+  "latents": {
+    "exactly_equal": true,
+    "max_abs_difference": 0.0
+  },
+  "all53_frame_png_bytes_equal": true,
+  "mp4_bytes_equal": true,
+  "sampled_power_limits_watts": [
+    130.0
+  ],
+  "restored_limit_verified_watts": 170.0,
+  "limitations": [
+    "One sequential matched pair,not a statistical benchmark.",
+    "Same nativeINT8/no-cache/0.25GiB donor/thermal pacing in both.",
+    "No universal speed or energy-efficiency claim.",
+    "User separately approved trial and subsequent queued-render use, with automatic restoration."
+  ]
+}
