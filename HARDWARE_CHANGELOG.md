@@ -113,3 +113,25 @@ After tests, nvidia-smi returned to approximately 734 MiB RTX / 2 MiB GTX, tempe
 Artifacts: wan-local-conversion.json, wan-offload-cpu.json/.log and wan-offload-gtx.json/.log. Preparation and smoke-test scripts saved to this chat's outputs for reproducibility. This successful test supersedes the earlier missing-model blocker; no model download occurred despite conditional authorization.
 
 Post-test check: no matching NVIDIA assertion/Xid/blocked-sleep messages in the last ten minutes of kernel logs. Core ComfyUI tracked tree is clean, and test port 8199 is not listening.
+
+## 2026-11-08 — first bounded actual video with GTX offload
+
+User authorized a small actual video using existing Wan models and RTX-primary/GTX-offload configuration. Planned output: 256x144, 17 frames at 16 fps (~1.06 seconds), 12 Euler/simple denoising steps, CFG 5, flow shift 8, seed 30601660. Prompt: "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera." Negative: "blurry, distorted, flickering, text, watermark". Low-resolution smoke test, not a high-quality production preset.
+
+Use existing local FP32 1.3B transformer through installed native ComfyUI DisTorch2 loader/sampler with 1 GiB GTX donor, 2 GiB RTX reserve and static loading. Existing Diffusers runtime handles local CPU UMT5 encoding and local RTX VAE decoding in separate processes; no WanVideoWrapper and no core ComfyUI changes. All stages force local/offline model loading. Existing source model files remain untouched. Native sampler process_out already unnormalizes Wan latents; decode must not apply that transform twice.
+
+Resource monitor samples both GPUs and available RAM every two seconds. Abort above 10,240 MiB RTX or 5,120 MiB GTX usage, at >=82 C, or below 8 GiB available RAM; these are sampled limits, not a hard allocator cap. Per-stage time limits: encode 600s, sample 480s, decode 180s. Monitor stops only its own child process group if a limit or failure occurs. No suspend/driver/display/power changes. Final results follow.
+
+### Completed actual-video result
+
+PASS: produced wan-gtx-offload-small.mp4, verified by ffprobe as H.264/yuv420p, 256x144, 17 frames, 16 fps, 1.0625 seconds. All three monitored subprocesses exited successfully. No downloads. Native ComfyUI denoising ran on RTX 3060 with 1,051,208,704 bytes of transformer parameters on GTX 1660, 4,623,660,288 on RTX, and 1,118,208 on CPU. Sampler used the installed branch unchanged. No production-code fixes were required.
+
+Text encoding: 148.0 seconds on CPU, using local FP32 UMT5 and 512-token padded prompt embeddings. Denoising: 19.244 seconds for 12 steps, finite latent shape [1,16,5,18,32]; RTX peak torch-allocated memory 4,903,590,400 bytes. Decode/export: 6.614 seconds, finite 17-frame tensor, RTX peak torch-allocated memory 1,317,302,272 bytes. These stage times are not overall wall time and are single-run measurements, not a benchmark against RAM-only operation.
+
+Sampled monitoring summary: {"sampled_peak_by_nvidia_smi_index": {"0": {"memory_mib": 1149, "temperature_c": 36}, "1": {"memory_mib": 5945, "temperature_c": 65}}, "minimum_available_ram_gib": 48.3006706237793, "limits_triggered": false}.
+
+Visual inspection of first/every-fourth/final frames shows a small sailboat scene with frame-to-frame variation. The tiny 12-step preview is soft, saturated and has limited motion; it is not evidence of production-quality Wan output or equivalence with an unmodified reference. Mean absolute frame change is 3.514/255 and pixel standard deviation is 61.184, useful sanity checks rather than quality scores. No full-resolution, long-duration, repeated-load, dynamic-loader or numerical baseline comparison performed.
+
+After completion both GPU processes released resources: approximately 765 MiB RTX / 2 MiB GTX, 49 C / 33 C at final check. No matching NVIDIA assertion/Xid/blocked-sleep messages in recent kernel logs. Core ComfyUI tracked tree stays clean. No server was started. No driver, display, suspend/resume or power settings changed; prior suspend/resume issue remains unresolved.
+
+Reproducibility artifacts in this chat outputs: video_settings.json, video_text_decode.py, video_sampler.py and run_small_video.py; reports wan-video-text.json, wan-video-sampling.json, wan-video-decode.json, wan-video-run.json, wan-video-resource-summary.json; raw stage logs and monitor JSONL. Embeddings, sampled latents and PNG frames remain under work/ for follow-up. Original local model cache and backed-up extension remain intact. The video uses Diffusers only for text/VAE components and native ComfyUI plus DisTorch2 for actual denoising/offload; this does not validate WanVideoWrapper, which is absent.
