@@ -72,3 +72,13 @@ All 10 regression tests pass from the installed copy. RAM-only safe-launch plan 
 Rollback: with ComfyUI stopped, move the current extension outside custom_nodes and copy the recorded original backup back to custom_nodes/ComfyUI-MultiGPU. Do not leave two copies under custom_nodes. Backup contains the original Git checkout; it has not been modified by testing.
 
 For normal startup use the installed safe_launch.py with the ComfyUI environment's Python and --launch. The default selects only RTX 3060 plus RAM. Add the documented --donor option only when intentionally using GTX storage. Existing desktop launch shortcuts were not changed and may not activate this safety profile.
+
+## 2026-11-08 — existing Wan model inventory
+
+Requested next step: actual Wan offloading, starting small with existing weights only.
+
+ComfyUI models directory contains only placeholders and YAML configs; no model symlinks and no extra_model_paths.yaml are present. No .safetensors/.gguf/.ckpt weights found in AI, Downloads or Projects. Hugging Face hub cache contains CLIP-ViT-B-32, stable-fast-3d and dinov2-large; no Wan repository. Targeted mounted-drive searches of CyData/models and CyData/model_lab found no Wan or safetensors/GGUF files within four levels.
+
+Actual Wan test cannot proceed with the inspected model inventory. No downloads, prompts or generation started. An existing Wan diffusion-model path is needed; a generation test also needs matching text encoder and VAE. Do not substitute an unrelated model and report it as a Wan test. Broader filename search results are recorded below. Installed extension and original backup remain unchanged except this log.
+
+Broader recursive filename search under home, /mnt and /media produced no matching Wan/UMT5 weights before being stopped after approximately one minute to avoid an unbounded scan of the old drive. This is not proof no weights exist elsewhere or under different filenames.
