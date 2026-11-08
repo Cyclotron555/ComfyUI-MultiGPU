@@ -52,3 +52,23 @@ No Wan weights downloaded, full generation, quality comparison, donor throughput
 This code cannot fix or prevent recurrence of NVIDIA's suspend/resume hang. Resolve driver/power-management diagnosis separately without triggering suspend during inference tests.
 
 Potential small upstream fixes: respect core/model compute selection; validate donor input; use available rather than total donor capacity. Hardware-specific launcher/profile should be reviewed independently. Keep this log updated with future commit IDs, test results and model-specific observations before proposing changes to pollockjj.
+
+## 2026-11-08 — installation and safe startup validation
+
+Original clean installation backed up verbatim, including .git and untracked files, to `/home/claudebutnaru/AI/backups/ComfyUI-MultiGPU-original-20261108-114312`. Backup HEAD verified against original. Installed branch commit `bdd7de8dd0b6d4e2169c486914b34f8d7d64de94` via staged clone. No previously running ComfyUI server found.
+
+All 10 regression tests pass from the installed copy. RAM-only safe-launch plan created. Startup test uses the same UUID environment and 2 GiB reservation, adding offline mode, browser auto-launch disabled, localhost-only port 8199. No prompts submitted or model weights loaded by the test. Startup/API results pending below.
+
+### Completed validation
+
+- RAM-only startup passed: ComfyUI 0.44.0 reports RTX 3060 at logical cuda:0; 26 MultiGPU nodes available via /object_info. Loader compute/device defaults inspected through API select cuda:0. /queue running and pending both empty.
+- Optional-donor startup also passed: node choices include cpu, cuda:0 and cuda:1, while primary remains RTX 3060. GTX is visible for storage selection; this does not prove real model offloading or throughput.
+- Both test servers stopped cleanly with SIGINT, exit code 0. Nothing left listening on test port 8199.
+- No prompts, model downloads, generation or suspend/resume tests. No driver/display/power-setting changes. ComfyUI tracked working tree remains clean. No new NVIDIA assertion/Xid/blocked-sleep messages found in the recent kernel-log check.
+- Startup initialized ordinary CUDA/runtime state (RTX memory observed around 808 MiB during first startup); this was not a full inference load. GTX stayed idle in the first RAM-only test. No throughput benchmark performed.
+- Test artifacts in this chat's outputs: installation-record.json, installed-launch-plan.json, installed-launch-plan-donor.json, installed-test-results.json, installed-test-results-donor.json and comfy-startup-test*.log.
+- Initial "not installed" notes above describe the earlier implementation stage. This section supersedes them: the branch is now installed, but servers are stopped. WanVideoWrapper is still absent; end-to-end Wan inference and cached-assignment behavior remain unverified.
+
+Rollback: with ComfyUI stopped, move the current extension outside custom_nodes and copy the recorded original backup back to custom_nodes/ComfyUI-MultiGPU. Do not leave two copies under custom_nodes. Backup contains the original Git checkout; it has not been modified by testing.
+
+For normal startup use the installed safe_launch.py with the ComfyUI environment's Python and --launch. The default selects only RTX 3060 plus RAM. Add the documented --donor option only when intentionally using GTX storage. Existing desktop launch shortcuts were not changed and may not activate this safety profile.
