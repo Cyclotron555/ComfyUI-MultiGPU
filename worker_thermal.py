@@ -25,7 +25,8 @@ class ThermalPacer:
     """One worker's bounded cooling pauses; no Torch import or global state."""
     def __init__(self, primary_uuid, *, fence, drain, pause_at=75, resume_at=67,
                  cutoff=82, poll_seconds=0.25, timeout_seconds=120,
-                 temperature_reader=None, clock=time.monotonic, sleep=time.sleep):
+                 temperature_reader=None, clock=time.monotonic, sleep=time.sleep,
+                 telemetry_backend='smi'):
         values = (pause_at, resume_at, cutoff, poll_seconds, timeout_seconds)
         if not all(math.isfinite(value) for value in values):
             raise ValueError('Thermal settings must be finite')
@@ -33,14 +34,29 @@ class ThermalPacer:
             raise ValueError('Require resume < pause < cutoff and positive timing limits')
         if not primary_uuid.startswith('GPU-'):
             raise ValueError('Use an exact NVIDIA GPU UUID')
+        if telemetry_backend not in ('smi', 'nvml'):
+            raise ValueError('Telemetry backend must be smi or nvml')
         self.fence, self.drain = fence, drain
-        self.read = temperature_reader or (lambda: read_temperature(primary_uuid))
+        self._owned_reader = None
+        self.telemetry_backend = 'injected' if temperature_reader is not None else telemetry_backend
+        if temperature_reader is not None:
+            self.read = temperature_reader
+        elif telemetry_backend == 'nvml':
+            from thermal_telemetry import NvmlTemperatureReader
+            self._owned_reader = NvmlTemperatureReader(primary_uuid)
+            self.read = self._owned_reader
+        else:
+            self.read = lambda: read_temperature(primary_uuid)
         self.pause_at, self.resume_at, self.cutoff = pause_at, resume_at, cutoff
         self.poll, self.timeout = poll_seconds, timeout_seconds
         self.clock, self.sleep = clock, sleep
         self.cooling_seconds = 0.0
         self.pauses = 0
         self.maximum_observed_c = 0
+
+    def close(self):
+        if self._owned_reader is not None:
+            self._owned_reader.close()
 
     def temperature(self):
         temperature = self.read()

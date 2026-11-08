@@ -312,3 +312,5 @@ Maintenance has ended. Until the repository is archived on 30 September 2026, fo
 Maintained by [pollockjj](https://github.com/pollockjj) until September 2026.
 Originally created by [Alexander Dzhoganov](https://github.com/AlexanderDzhoganov).
 With deepest thanks to [City96](https://v100s.net/).
+
+Opt-in cooling diagnostics, temporary RTX fan/power tests, restoration requirements and a walking-human Wan recipe are documented in [WAN_PERFORMANCE.md](WAN_PERFORMANCE.md#cooling-experiments-and-direct-temperature-reads). Normal extension loading does not change fan or power settings.

@@ -290,3 +290,15 @@ The continuous run sampled in 2,196.45 s, decoded in 277.70 s, and took 2,488.32
 The explicitly approved temporary 130 W limit was observed throughout the monitored batch. After completion, the administrator helper restored the original 170 W RTX limit; independent NVIDIA readback confirmed it. All owned render workers, the watcher and power helper exited successfully. No matching current-boot NVIDIA Xid/assertion or blocked-task entries were found in the journal check. Suspend/resume was not exercised or fixed. Existing originals remain preserved.
 
 See [the completed measurement report](https://github.com/Cyclotron555/ComfyUI-MultiGPU/blob/performance/wan-3060-safe-speed/benchmarks/results/rtx3060-ten-seconds.json). The prior 30 CPU-only tests passed; this final update changes documentation and recorded results only. The small 1.3B model and extended sequence length still limit fidelity and temporal reliability; these results are not a general performance guarantee.
+
+## Cooling and walking-human phase — 20261108-170316
+
+User requested faster videos without quality loss and a human walking. Backed up installed extension to /home/claudebutnaru/AI/backups/ComfyUI-MultiGPU-before-cooling-20261108-170316. Baseline desktop RTX47C/170W, GTX40C. NVIDIA reports SW/HW thermal slowdown counters0; software guard pauses at75C, well below reported83C target/93C maximum operating temperature. Keep conservative guard unchanged. NVML read-only temperature query measured8.5us versus38ms per nvidia-smi process (~24s theoretical savings across630 checks, not an end-to-end speed claim). XWayland fan settings are unavailable; direct NVML reports two RTX fans, both automatic policy0, speed35%, allowed30–100%. Investigate a bounded75% fan experiment at130W through documented NVML API, restoring automatic control and170W. No display/driver changes.
+
+2026-11-08T17:08:57.332763-06:00 Cooling/walking controller stopped: KeyboardInterrupt()
+
+Pre-render setup adjustment: automatic fan-stop at idle held RTX51–52C, so a50C starting target was unsuitable. No model worker had started. Interrupted controller normally, verified helper restored automatic fans and170W, preserved this idle-only attempt separately, and use the previous validated55C between-run start ceiling. The75/67C pacing and82C worker cutoff remain unchanged.
+
+2026-11-08T17:09:28.487002-06:00 START walking-baseline
+
+Cooling code validation:41 CPU-only tests pass, including UUID mismatch/fork/query-error handling, no driver initialization at import, no fan writes during planning, refusing existing manual policy or lowering automatic target, restoring both fans after partial setter failure,80C stop, and integrated interrupt restoring fans+170W and signaling controller abort. Added explicit NVML backend (SMI remains default), read-only telemetry benchmark, opt-in temporary fan flags and walking recipe. Actual100-query read-only probe: NVML1.81us/query vsSMI37.31ms/query. End-to-end benefit is not yet established. Existing encode weights used locally on CPU;145.05s to encode walking prompt, no download.

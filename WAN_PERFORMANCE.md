@@ -151,3 +151,32 @@ The continuous run sampled in 2,196.45 s, decoded in 277.70 s, and took 2,488.32
 The explicitly approved temporary 130 W limit was observed throughout the monitored batch. After completion, the administrator helper restored the original 170 W RTX limit; independent NVIDIA readback confirmed it. All owned render workers, the watcher and power helper exited successfully. No matching current-boot NVIDIA Xid/assertion or blocked-task entries were found in the journal check. Suspend/resume was not exercised or fixed. Existing originals remain preserved.
 
 See [the completed measurement report](benchmarks/results/rtx3060-ten-seconds.json). The prior 30 CPU-only tests passed; this final update changes documentation and recorded results only. The small 1.3B model and extended sequence length still limit fidelity and temporal reliability; these results are not a general performance guarantee.
+
+
+## Cooling experiments and direct temperature reads
+
+`ThermalPacer(..., telemetry_backend="nvml")` opts into process-local, read-only NVIDIA NVML temperature queries. The default stays `smi` for compatibility. Both readers retain the same compute-stream fence, full drain before cooling, 75°C pause, 67°C resume and 82°C cutoff. NVML selects and verifies the exact GPU UUID, reads live values without caching, rejects use after fork/close, and stops on driver/query failure. Call `pacer.close()` when done. Importing the module does not initialize the driver; no extra Python package is needed. There is no silent backend substitution when NVML was explicitly requested.
+
+Read-only latency probe (this measures telemetry overhead, not generation speed):
+
+```bash
+python benchmarks/thermal_probe.py --primary GPU-RTX-UUID --iterations 100
+```
+
+The existing bounded power helper now also supports an **optional** temporary 70–100% RTX fan target through NVML. It requires the exact RTX3060 12GB UUID, rejects existing manual fan policies and refuses to lower an existing automatic fan target. Every changed fan is restored to automatic, including on partial setter failure. An independent 80°C helper stop and the worker's existing monitoring remain active. A deadline or error touches an abort file that the experiment controller must watch and use to stop its own worker. Fans and power are not changed by normal extension import, launch flags or recipe loading.
+
+```bash
+# Read-only plan first; create a fresh control directory and use absolute paths.
+python benchmarks/temporary_power_limit.py \
+  --primary GPU-RTX-UUID --watts 130 --seconds 7200 \
+  --fan-percent 75 --abort-file /absolute/path/ABORT \
+  --stop-file /absolute/path/POWER_DONE
+# For an explicitly authorized actual test, run the same arguments using:
+# pkexec /usr/bin/python3 -I /absolute/path/benchmarks/temporary_power_limit.py ... --run
+```
+
+An optional `--fan-start-file /absolute/path/FAN_ON` leaves automatic fan control active until that file appears, allowing a matched baseline first. Control files must be distinct and absent initially. Creating the stop file restores automatic fans and the original power cap. A controller must also monitor resources, stop its owned render on abort and create the stop file on exit. The helper has a two-hour maximum fallback; it is not a permanent fan service and cannot recover from SIGKILL or power loss. Restoration must be independently checked afterward. No drivers, display assignments, clock offsets, temperature limits, persistence mode or Xorg configuration are changed.
+
+See the [walking-human recipe](profiles/wan13b_human_walking_3060_gtx1660.json). Exact latent and PNG comparisons, not unchanged recipe settings alone, are required before claiming output preservation. A single matched pair remains sensitive to foreground desktop activity and starting temperature.
+
+Primary references: [NVIDIA NVML device queries](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceQueries.html), [initialization and cleanup](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlInitializationAndCleanup.html), and [temporary fan control and restoring defaults](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceCommands.html).
