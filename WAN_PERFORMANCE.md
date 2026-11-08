@@ -140,3 +140,14 @@ Remove `--wan-performance` to restore the prior launch flags. Select PyTorch att
 - [PyTorch SDPA and backend selection](https://docs.pytorch.org/docs/main/generated/torch.nn.functional.scaled_dot_product_attention.html)
 - [SageAttention hardware/build requirements](https://github.com/thu-ml/SageAttention)
 - [TeaCache's Wan2.1 experiments](https://github.com/ali-vilab/TeaCache/tree/main/TeaCache4Wan2.1) (A800 figures are not RTX 3060 results; its thresholds are not interchangeable with EasyCache)
+
+
+## Completed ten-second comparison — 2026-11-08
+
+Both native 832×480, 16 fps videos completed with finite sampling and decoding: continuous 161 frames (10.062 s), and three independent 53-frame shots (159 frames, 9.938 s). No upscaling or frame interpolation was used. Sampled first/middle/last frames show a consistent boat and horizon in the continuous clip; the independent shots vary in boat design and lighting. This frame inspection does not establish perfect temporal consistency.
+
+The continuous run sampled in 2,196.45 s, decoded in 277.70 s, and took 2,488.32 s across measured stages (41.47 minutes). Cooling accounted for 920.82 s of sampling, so sustained cooling remains a major bottleneck. Peak RTX allocation reported by monitoring was 7,630 MiB at 75°C; GTX peak was 354 MiB at 47°C, with at least 50.84 GiB RAM available. The RTX remained compute/display primary; the GTX stored offloaded weights rather than running parallel denoising. Native INT8 attention, BF16 transformer, FP32 VAE and 0.25 GiB donor settings were used, with approximate step caching disabled.
+
+The explicitly approved temporary 130 W limit was observed throughout the monitored batch. After completion, the administrator helper restored the original 170 W RTX limit; independent NVIDIA readback confirmed it. All owned render workers, the watcher and power helper exited successfully. No matching current-boot NVIDIA Xid/assertion or blocked-task entries were found in the journal check. Suspend/resume was not exercised or fixed. Existing originals remain preserved.
+
+See [the completed measurement report](benchmarks/results/rtx3060-ten-seconds.json). The prior 30 CPU-only tests passed; this final update changes documentation and recorded results only. The small 1.3B model and extended sequence length still limit fidelity and temporal reliability; these results are not a general performance guarantee.

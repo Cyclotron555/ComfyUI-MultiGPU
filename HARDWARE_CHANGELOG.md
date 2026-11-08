@@ -265,3 +265,28 @@ Published and read-back verified feature branch performance/wan-3060-safe-speed 
 User explicitly approved adopting130W only for the queued videos, with original170W restored after completion. Prepared7200s administrator helper session with independent nonprivileged power trace/cleanup watcher; batch remains gated until authenticated cap readback. All30 CPU tests and watcher complete/failed cleanup fixtures passed. Standalone power experiment compared exact53 PNGs and MP4 bytes: both identical between170W/130W, in addition to bit-identical sampled latents. Actual trial restored170W before the new session.
 
 Approved remaining-render130W session authenticated and live-readback verified; independent watcher running and will signal170W restoration on batch complete/failure (7200s helper deadline). Released performance gate. Remaining shots/continuous use installed nativeINT8,0.25GiB GTX weight storage,cacheOFF,UUID-verified RTX primary and unchangedVRAM/RAM/82C stops. Models remain unprivileged; no unrelated processes targeted.
+
+2026-11-08T16:04:55.841976-06:00 PASS quality-ten-second-shot-02: {"sampled_peaks": {"GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {"memory_mib": 354, "temperature_c": 45}, "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {"memory_mib": 6128, "temperature_c": 75}}, "sampling_seconds": 295.9204813509996, "cooling_seconds": 25.758889694001482}
+
+2026-11-08T16:05:38.725963-06:00 START quality-ten-second-shot-03
+
+2026-11-08T16:13:36.816403-06:00 PASS quality-ten-second-shot-03: {"sampled_peaks": {"GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {"memory_mib": 354, "temperature_c": 48}, "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {"memory_mib": 6109, "temperature_c": 75}}, "sampling_seconds": 376.37477671600027, "cooling_seconds": 103.30481138900268}
+
+2026-11-08T16:13:36.921950-06:00 PASS three-shot sequence: native 832x480,159 frames at16fps,9.9375s. Three independently generated53-frame shots, hard cuts; no slow-down, repetition or interpolation. Identity continuity not guaranteed.
+
+2026-11-08T16:14:30.052910-06:00 START quality-ten-second-continuous
+
+2026-11-08T16:56:00.313686-06:00 PASS quality-ten-second-continuous: {"sampled_peaks": {"GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {"memory_mib": 354, "temperature_c": 47}, "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {"memory_mib": 7630, "temperature_c": 75}}, "sampling_seconds": 2196.454462615, "cooling_seconds": 920.8150365709853}
+
+2026-11-08T16:56:00.359117-06:00 Both native-resolution versions complete. All workers exited. GPU reserves and cutoff unchanged; visual QA still required.
+
+
+## Completed ten-second comparison — 2026-11-08
+
+Both native 832×480, 16 fps videos completed with finite sampling and decoding: continuous 161 frames (10.062 s), and three independent 53-frame shots (159 frames, 9.938 s). No upscaling or frame interpolation was used. Sampled first/middle/last frames show a consistent boat and horizon in the continuous clip; the independent shots vary in boat design and lighting. This frame inspection does not establish perfect temporal consistency.
+
+The continuous run sampled in 2,196.45 s, decoded in 277.70 s, and took 2,488.32 s across measured stages (41.47 minutes). Cooling accounted for 920.82 s of sampling, so sustained cooling remains a major bottleneck. Peak RTX allocation reported by monitoring was 7,630 MiB at 75°C; GTX peak was 354 MiB at 47°C, with at least 50.84 GiB RAM available. The RTX remained compute/display primary; the GTX stored offloaded weights rather than running parallel denoising. Native INT8 attention, BF16 transformer, FP32 VAE and 0.25 GiB donor settings were used, with approximate step caching disabled.
+
+The explicitly approved temporary 130 W limit was observed throughout the monitored batch. After completion, the administrator helper restored the original 170 W RTX limit; independent NVIDIA readback confirmed it. All owned render workers, the watcher and power helper exited successfully. No matching current-boot NVIDIA Xid/assertion or blocked-task entries were found in the journal check. Suspend/resume was not exercised or fixed. Existing originals remain preserved.
+
+See [the completed measurement report](https://github.com/Cyclotron555/ComfyUI-MultiGPU/blob/performance/wan-3060-safe-speed/benchmarks/results/rtx3060-ten-seconds.json). The prior 30 CPU-only tests passed; this final update changes documentation and recorded results only. The small 1.3B model and extended sequence length still limit fidelity and temporal reliability; these results are not a general performance guarantee.
