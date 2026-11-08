@@ -149,3 +149,33 @@ Both complete 512x288 / 33-frame / 20-step videos passed and all child processes
 Sampled GPU peaks (MiB, C): GTX run RTX 7173/77 and GTX 1149/40; RAM run RTX 6990/80 and GTX idle 2/38. Minimum available RAM 47.91 GiB / 48.25 GiB. No stop threshold reached. RAM run occurred second with warmer GPU and caches; no repeated benchmark or broad speed claim. Favor RAM as default for this workload; GTX remains optional tested storage. Videos and reports live under outputs/quality-gtx and outputs/quality-ram; comparison in outputs/quality-comparison.json.
 
 Larger preview visually shows a clearer red sailboat with water detail than the first tiny video. This is still a short low-step test, not a production-quality guarantee. No driver/display/power changes or new model downloads. Subsequent Resources UI customization is a separate codebase and must not be bundled into MultiGPU code.
+
+## 2026-11-08 — controlled quality refinement, 30 steps
+
+User requested improved video quality with RTX 3060 primary. Preserve the successful 20-step baseline. New run: same local FP32 Wan 2.1 T2V 1.3B, sailboat prompt and cached embeddings, seed 30601660, 512x288, 33 frames at 16 fps, CFG 5, flow shift 8, Euler/simple. Only denoising steps increase 20 to 30. RAM offloading (1 GiB) chosen from the earlier matched pair; GTX remains optional and is not exposed to this run. UUID mapping selects RTX 3060 explicitly. No model downloads, driver/display/power changes or upstream modifications.
+
+Use existing two-second resource sampling, RTX 10,240 MiB cap, GTX 5,120 MiB cap, >=82 C temperature stop, minimum 8 GiB available RAM and bounded sampling/decode stages. These sampled checks are not a hard allocator limit. Results will be compared visually and numerically with the 20-step baseline; more steps are not assumed to guarantee better quality.
+
+### Completed 30-step refinement
+
+PASS: RTX-primary/RAM-offload run completed 30 Euler/simple steps in 218.269 seconds (20-step baseline 147.726s). Decode/export 13.977s. MP4 verified at 512x288, 33 frames, 2.0625s. Finite sampled/decoded tensors; RTX peak torch allocation 5,787,621,888 bytes. Sampled device peaks: RTX 6971 MiB / 79 C; GTX 2 MiB / 37 C. Minimum available RAM 47.52 GiB. No monitoring threshold reached; both stage processes exited successfully. No new matching NVIDIA assertion/Xid/blocked-sleep messages found in recent kernel check.
+
+Saved outputs/quality-30steps/wan-quality-30steps.mp4 and 20-vs-30-steps.jpg. Visual comparison shows more defined hull/rigging and changed water detail, but imperfections remain; extra steps alone do not establish a large or objective quality gain. Pixel difference from baseline is recorded only as evidence of change, not a quality score. Baseline preserved. RTX returned to desktop-level memory after process exit. No code changes, model downloads, driver/display/power changes.
+
+## 2026-11-08 — developer example workflow audit
+
+User requested examining the developer's examples to understand stronger demo results. Started with pollockjj's bundled examples in the base fork and cross-checked the official ComfyUI Wan2.2 guide and kijai/WanVideoWrapper. No exact demo link was supplied, so findings describe inspected workflows, not a proven causal explanation of an unspecified showcase clip.
+
+- wan2_2 distorch2 double_unet no_cpu.json: high/low noise Wan2.2 14B FP8 scaled models, 1280x704, 57 frames, 20-step Euler/simple schedule split at step 10, CFG 3.5, shift 8. Both model nodes request 9 GiB virtual VRAM from cuda:1; VAE/text encoder also assigned there. The filename/note is not a reliable substitute for inspecting actual nodes and wiring.
+- wan2_2 t2v lightx2v lora distorch2.json: same 14B high/low model family, matching high/low LightX2V/Seko LoRAs, 768x768, 81 frames, 8-step Euler/simple schedule split at 4, CFG 1. One model donates to GPU and the other to CPU in this saved graph. These accelerated model/LoRA settings cannot be blindly applied to our plain Wan2.1 1.3B model.
+- ComfyUI-WanVideoWrapper wanvideo_T2V.json: 14B Wan2.1 model, 832x480x81, UniPC sampler, 25 steps, CFG 6, shift 5; Enhance-A-Video, TeaCache/block-swap/compile configuration appears in the graph. Cache/compile/swap settings concern execution and require compatibility checks rather than being universal quality knobs.
+- ComfyUI-WanVideoWrapper wanvideo_1_3B control_lora.json: 1.3B model with a tile control LoRA and an existing input video, not plain text-only generation; UniPC 30 steps/CFG 6/shift 5. Video conditioning and control materially change the task.
+- Wan2.2 I2V A14B GGUF example uses image conditioning, high/low noise quantized 14B models and matching LoRAs. This is not equivalent to our unconditioned small T2V baseline.
+
+Major differences: model family/capacity, conditioning, resolution/frame count, and acceleration trained for a particular model. Current offload work enables placement but does not upgrade model capability. No standalone post-upscaler was present in the two reviewed native T2V graphs; do not assume all visible quality came from post-processing.
+
+Hardware adaptation: never copy example cuda:0/cuda:1 identities or 9/13 GiB donor settings. The GTX has 6 GiB total and cannot supply those requests alone. Preserve UUID-verified RTX primary, desktop reserve and RAM fallback. Two 14B experts and their LoRAs require a separate memory/download plan; no such model download is authorized by this audit.
+
+Official ComfyUI guide says Wan2.2 TI2V 5B should fit 8 GB VRAM with native offloading, making it a candidate intermediate upgrade, not a local guarantee or a match for the demonstrated 14B workflow. Its Wan2.2 VAE differs from the VAE used by the 14B examples. Link: https://docs.comfy.org/tutorials/video/wan/wan2_2 . Official Wan reference-script memory figures differ from optimized ComfyUI workflows; do not mix their requirements.
+
+Audit details and source links saved in outputs/developer-workflow-audit.json. Original examples: https://github.com/pollockjj/ComfyUI-MultiGPU/tree/main/example_workflows . Related wrapper: https://github.com/kijai/ComfyUI-WanVideoWrapper . Next quality work should choose a model/conditioning strategy from these verified differences before increasing workload further.
