@@ -82,3 +82,34 @@ ComfyUI models directory contains only placeholders and YAML configs; no model s
 Actual Wan test cannot proceed with the inspected model inventory. No downloads, prompts or generation started. An existing Wan diffusion-model path is needed; a generation test also needs matching text encoder and VAE. Do not substitute an unrelated model and report it as a Wan test. Broader filename search results are recorded below. Installed extension and original backup remain unchanged except this log.
 
 Broader recursive filename search under home, /mnt and /media produced no matching Wan/UMT5 weights before being stopped after approximately one minute to avoid an unbounded scan of the old drive. This is not proof no weights exist elsewhere or under different filenames.
+
+## 2026-11-08 — deeper search correction and real Wan test
+
+Correction to the preceding inventory: deeper targeted search located complete Wan-AI/Wan2.1-T2V-1.3B-Diffusers weights inside the 2026-11-07 Codex workspace, under work/video-maker-data/models/hub. Generic filenames and snapshot symlinks caused earlier narrow searches to miss them. Never interpret the previous inventory as proof the machine lacked Wan weights. Also found unrelated Flux/Kronos/semantic-model weights. No Wan weights found by today's plocate index query; bounded broad scans timed out. An unmounted NTFS disk was not searched or mounted.
+
+User authorized a 2.84 GB test-model download if needed; no download was needed or performed. Transformer source snapshot 0fad780a534b6463e45facd96134c9f345acfa5b has two complete FP32 shards (5,676,070,648 bytes combined), verified against safetensors header offsets. Five text-encoder shards and VAE also match header sizes. These checks establish structural completeness, not a cryptographic comparison against remote hashes.
+
+Created separate models/diffusion_models/wan2.1_t2v_1.3B_local_fp32.safetensors (5,676,070,584 bytes), merging and renaming 825 keys. Every renamed key roundtrips exactly through the installed Diffusers convert_wan_transformer_to_diffusers function. No weight arithmetic, dtype change or original-cache modification. Conversion script and JSON report retained in this chat workspace.
+
+Actual-model test uses installed UNETLoaderDisTorch2MultiGPU, FP32 source preservation, static model loading (--disable-dynamic-vram), 2 GiB reserve and UUID-verified primary. First target is 1 GiB offload to CPU; next target optional GTX. A single synthetic forward uses latent [1,16,1,4,4] and zero context [1,4,4096]; no text-encoder load, VAE decode or generated video. This exercises loading and block transfers rather than generation quality. Per-process timeout 180 seconds.
+
+First test harness import failed because built-in extra nodes had not been initialized (TripleCLIPLoader missing). Corrected harness to initialize them before custom nodes, matching server startup order. No extension fix required for this harness error. Final results follow.
+
+### Actual Wan offload results
+
+Second harness correction: call the node's declared FUNCTION (override), rather than inherited load_unet directly. The inherited method does not accept MultiGPU fields. Both harness errors occurred before loading weights and are retained in wan-offload-harness-*.log. No production code was changed to resolve them.
+
+Both final tests loaded real WAN21 weights through the installed DisTorch2 node and completed a single synthetic forward with finite output of shape [1,16,1,4,4]. Source FP32 preserved. RAM and GTX tests ran in separate short-lived processes; no server/queue was started and no video was generated.
+
+| Target | RTX parameter bytes | Donor parameter bytes | Load seconds | Tiny forward seconds | RTX peak allocated bytes |
+|---|---:|---:|---:|---:|---:|
+| RAM | 4623660288 | 1052326912 | 2.481 | 1.226 | 4745357824 |
+| GTX 1660 | 4623660288 | 1051208704 | 2.852 | 1.132 | 4745357824 |
+
+GTX test also retained 1,118,208 parameter bytes on CPU (non-distributed parameters); this is expected from the existing loader's treatment of parameters outside its distributed modules. Approximately 4.31 GiB of weights on RTX and 0.98 GiB donor storage. Allocator peak is not total desktop VRAM; first-run observed nvidia-smi usage reached 5,568 MiB on RTX. Timing is a single synthetic smoke test, not a trustworthy donor performance comparison. No CPU-vs-GTX numerical equivalence or full-video quality comparison performed.
+
+After tests, nvidia-smi returned to approximately 734 MiB RTX / 2 MiB GTX, temperatures 52 C / 32 C. Recent kernel-log check follows. Neither the original cache nor backup was changed. The separate converted 5.68 GB model remains available in ComfyUI. Future generation still requires compatible text-encoder/VAE loading and a bounded workflow; these were not attempted here. Static loading was tested; dynamic loading and cached-assignment memory changes remain unverified.
+
+Artifacts: wan-local-conversion.json, wan-offload-cpu.json/.log and wan-offload-gtx.json/.log. Preparation and smoke-test scripts saved to this chat's outputs for reproducibility. This successful test supersedes the earlier missing-model blocker; no model download occurred despite conditional authorization.
+
+Post-test check: no matching NVIDIA assertion/Xid/blocked-sleep messages in the last ten minutes of kernel logs. Core ComfyUI tracked tree is clean, and test port 8199 is not listening.
