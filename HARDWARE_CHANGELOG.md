@@ -135,3 +135,17 @@ Visual inspection of first/every-fourth/final frames shows a small sailboat scen
 After completion both GPU processes released resources: approximately 765 MiB RTX / 2 MiB GTX, 49 C / 33 C at final check. No matching NVIDIA assertion/Xid/blocked-sleep messages in recent kernel logs. Core ComfyUI tracked tree stays clean. No server was started. No driver, display, suspend/resume or power settings changed; prior suspend/resume issue remains unresolved.
 
 Reproducibility artifacts in this chat outputs: video_settings.json, video_text_decode.py, video_sampler.py and run_small_video.py; reports wan-video-text.json, wan-video-sampling.json, wan-video-decode.json, wan-video-run.json, wan-video-resource-summary.json; raw stage logs and monitor JSONL. Embeddings, sampled latents and PNG frames remain under work/ for follow-up. Original local model cache and backed-up extension remain intact. The video uses Diffusers only for text/VAE components and native ComfyUI plus DisTorch2 for actual denoising/offload; this does not validate WanVideoWrapper, which is absent.
+
+## 2026-11-08 — matched GTX versus RAM video comparison
+
+Authorized settings: same sailboat prompt/negative, seed 30601660, FP32 weights and conditioning, CFG 5, shift 8, Euler/simple; increased to 512x288, 33 frames at 16 fps, 20 steps. Each run offloads 1 GiB to either GTX or RAM. Reuse the exact cached prompt embeddings from the first successful video; no text-encoder rerun or downloads required. Separate work/quality-gtx and work/quality-ram folders and outputs/quality-* artifacts preserve the first video.
+
+Same sampled monitoring limits and stage timeouts as first video. Initial comparison launch accidentally invoked the old harness and began unnecessary re-encoding; stopped that child before completion. A second setup launch omitted donor environment selection and was stopped before the actual comparison. Both were harness invocation errors, not extension failures. The top-level wan-video-run.json/encode log from the earlier test were overwritten by the aborted old-harness launch; original MP4, model files, sampling/decode reports and original log results are preserved. Only correctly configured completed comparison runs are used below.
+
+### Matched comparison results
+
+Both complete 512x288 / 33-frame / 20-step videos passed and all child processes exited cleanly. GTX sampling: 163.130 seconds; RAM: 147.726 seconds (RAM 9.44% lower sampling time in this single sequential pair). Latent tensors were exactly equal (max absolute difference 0), and first decoded-frame pixels were equal. GTX storage: 1,051,208,704 parameter bytes; RAM storage: 1,052,326,912 bytes; RTX placement identical.
+
+Sampled GPU peaks (MiB, C): GTX run RTX 7173/77 and GTX 1149/40; RAM run RTX 6990/80 and GTX idle 2/38. Minimum available RAM 47.91 GiB / 48.25 GiB. No stop threshold reached. RAM run occurred second with warmer GPU and caches; no repeated benchmark or broad speed claim. Favor RAM as default for this workload; GTX remains optional tested storage. Videos and reports live under outputs/quality-gtx and outputs/quality-ram; comparison in outputs/quality-comparison.json.
+
+Larger preview visually shows a clearer red sailboat with water detail than the first tiny video. This is still a short low-step test, not a production-quality guarantee. No driver/display/power changes or new model downloads. Subsequent Resources UI customization is a separate codebase and must not be bundled into MultiGPU code.
