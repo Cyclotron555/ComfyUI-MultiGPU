@@ -1,0 +1,23 @@
+{
+  "model_family": "native Wan2.1 T2V 1.3B",
+  "launch_wan_performance": true,
+  "attention": "kitchen_int8",
+  "virtual_vram_gb": 0.25,
+  "cache_threshold": 0.0,
+  "cache_start": 0.15,
+  "cache_end": 0.85,
+  "sampler": "uni_pc",
+  "scheduler": "simple",
+  "steps": 30,
+  "cfg": 5.0,
+  "shift": 8.0,
+  "fps": 16,
+  "thermal_worker": {
+    "pause_at": 75,
+    "resume_at": 67,
+    "cutoff": 82,
+    "poll_seconds": 0.25,
+    "timeout_seconds": 120
+  },
+  "note": "Explicit UUID mapping required. Use the actual primary compute device and mapped GTX donor. Cache is off for quality. This file is a recipe, not an automatically installed workflow or a guarantee for every frame size."
+}

@@ -1,0 +1,137 @@
+# Tested Wan performance options for this fork
+
+This fork adds opt-in orchestration around existing ComfyUI features. The attention kernels and EasyCache implementation belong to ComfyUI/Comfy Kitchen and their contributors. DisTorch2 and the original extension are by pollockjj and contributors; this fork is not an upstream endorsement.
+
+Test machine: RTX 3060 12 GB at PCI `06:00.0` for generation/display, GTX 1660 6 GB at PCI `05:00.0` for offloaded weights, 64 GB RAM. Never copy another machine's CUDA indices. Tested core commit: `0decb39ee5b5e17c200334589fc317dbbe98310e`, Torch `2.15.0+cu132`, Comfy Kitchen `0.2.41`.
+
+## What changed
+
+- `safe_launch.py --wan-performance`: an explicitly selected Wan session adds native BF16 UNet execution, native PyTorch attention and the tested static-VRAM path. UUID mapping and the 2 GiB desktop reservation remain in force. Omitting the flag leaves the prior launch command unchanged.
+- `wan_performance.configure_wan`: selects native PyTorch or optional native Comfy Kitchen INT8 attention through a cloned model patcher. Optional native EasyCache is off by default. Unsupported optional components return an explicit fallback report; patching errors propagate. No global attention monkeypatch, new node duplicate, downloads, driver changes or original checkpoint rewriting.
+- `benchmarks/attention_probe.py`: an opt-in, model-free comparison with fixed small shapes, identity verification, memory/temperature checks and recorded numerical differences. A dry run does not import Torch or initialize CUDA.
+- `worker_thermal.ThermalPacer`: optional pacing for an owned experiment worker, with injected compute-stream fence/full-device drain, bounded cool-down, exact GPU UUID telemetry and fail-closed cutoff handling. It is not automatically attached to GUI models and does not replace the outer memory/RAM/process monitor.
+
+INT8 attention, BF16 compute and caching can change results. Synthetic numerical differences are not video-quality scores. Keep a reproducible baseline and compare actual motion and geometry before choosing an accelerated profile.
+
+## Start a mapped BF16 Wan session
+
+Use the ComfyUI environment's Python. Replace the placeholders with the exact UUIDs printed by `nvidia-smi -L`:
+
+```bash
+/path/to/ComfyUI/.venv/bin/python safe_launch.py \
+  --comfy-root /path/to/ComfyUI \
+  --primary GPU-RTX-UUID --donor GPU-GTX-UUID --wan-performance
+```
+
+Inspect the dry-run mapping, then add `--launch` to start. The selected physical RTX becomes logical `cuda:0` deliberately; it is not assumed to be NVIDIA-SMI GPU 0. This launcher still checks for the expected RTX 3060 12 GB. Donor selection is optional and defaults to RAM.
+
+In a native ComfyUI workflow, use **Model Attention Backend → comfy kitchen attention** after loading the Wan model. Keep text encoding and VAE on their tested paths. The native node falls back to PyTorch when the requested backend is unavailable. EasyCache, if used, goes after the model patches; begin with a conservative threshold and preserve the dense early/late sampling window. It is an approximation, not free exact reuse.
+
+For a scripted native ComfyUI run with this extension directory on `sys.path`:
+
+```python
+from wan_performance import configure_wan
+
+model, report = configure_wan(
+    model,
+    attention="kitchen_int8",  # "pytorch" is the default
+    cache_threshold=0.0,      # caching disabled; opt in only after a comparison
+)
+print(report)
+```
+
+This helper uses the model's existing compute device. It does not choose a GPU, set precision or perform thermal management. The caller retains its existing monitored worker and stop controls. Do not stack unrelated attention/cache patches and assume their benefits combine.
+
+The [tested quality recipe](profiles/wan13b_3060_gtx1660.json) keeps caching off and sets the existing DisTorch loader's `virtual_vram_gb` to 0.25. This is a workflow input, not a new global memory-management rule. On this machine, repeated transfer from a larger GTX allocation cost more time despite substantial free RTX memory. A smaller allocation still uses both cards. Do not apply this amount blindly to larger models or assume that unused donor VRAM is a performance problem.
+
+For a separate monitored worker, the pacing callbacks use its already verified compute device:
+
+```python
+from worker_thermal import ThermalPacer
+
+pacer = ThermalPacer(
+    primary_uuid,
+    fence=lambda: torch.cuda.current_stream(compute_device).synchronize(),
+    drain=lambda: torch.cuda.synchronize(compute_device),
+)
+# Invoke at bounded work boundaries, e.g. between transformer/decoder chunks.
+pacer.check()
+```
+
+Keep independent outer cancellation, VRAM/RAM limits and a worker timeout. Telemetry failure, temperature cutoff or failure to cool raises an error. There is no claimed speed gain from stream fencing alone; it preserves room for prefetch overlap without changing the cooling targets.
+
+## Evidence and interpretation
+
+The matched short BF16 check at 768×432, 17 frames, 30 UniPC/simple steps sampled in 66.110 seconds versus 290.591 seconds with the preserved FP32 setup, using RAM offload. This one pair demonstrates a practical gain on this machine, not a universal multiplier. Both sampled and decoded tensors were finite; checkpoint files remained unchanged.
+
+The small native-kernel test used BF16, batch 2, 12 heads, head dimension 128 and included quantization overhead. At 16,384 tokens, PyTorch Flash SDPA took 133.043 ms and native Kitchen INT8 took 51.817 ms (~2.57× kernel speed). Random-tensor relative RMS difference was ~0.0167. Peak Torch allocation was about 1.03 GiB; observed GPU temperature stayed at or below 56°C. These timings exclude model loading, layer computation, donor transfers, cooling and VAE export. Full-video measurements must be reported separately.
+
+The installed sparse SOL kernel was also probed but showed a much larger random-tensor discrepancy. It is not selected by this helper. SageAttention and Torch compilation remain research alternatives; no new package was installed or incompatible CUDA build attempted. The native kernel already available here is the lower-change first candidate.
+
+Completed matched video results, when available, are recorded in `benchmarks/results/` and `HARDWARE_CHANGELOG.md`. Long-shot tests are separate from the small-kernel comparison; a 161-frame shape test does not establish ten-second visual consistency.
+
+### Matched video results on this machine
+
+Same 768×432, 17 frames, 30 UniPC/simple steps, BF16 UNet, seed/prompt/CFG/shift and both-card mapping. All cases passed finite sample/decode and MP4 export. These are single sequential runs, with different initial thermal states; they are not statistical estimates.
+
+| Configuration | Sampling, including cooling | Load/sample + decode/export stages |
+| --- | ---: | ---: |
+| PyTorch SDPA, 1 GiB donor | 102.54 s | 132.11 s |
+| Native INT8, 1 GiB donor | 98.13 s | 130.17 s |
+| Native INT8, 0.25 GiB donor | 78.74 s | 109.80 s |
+| Native INT8, 1 GiB donor, EasyCache 0.10 | 54.28 s | 83.34 s |
+| Native INT8, 0.25 GiB donor, compute-stream thermal fence | 88.83 s | 119.88 s |
+| Native INT8, 0.25 GiB donor, EasyCache 0.05, reusable pacer | 53.03 s | 83.35 s |
+
+The 1 GiB → 0.25 GiB donor change preserved native INT8 sampled latents **bit-for-bit** in this pair while reducing sampling time by about 20%. It removes transfer work rather than adding a new approximation. The system reported a PHB interconnect and direct peer reads unsupported between these GPUs. This does not make maximum donor occupancy a useful speed target.
+
+The synchronization variants were also bit-identical. Their time excluding cooling was similar (~72–73 s); no independent stream-fence speed gain was established. EasyCache 0.10 skipped 12/30 steps; 0.05 skipped 9/30. Both changed output geometry/composition, so caching stays off in the quality recipe. Lower sampling time is not evidence of equal video quality.
+
+Short-run peak sampled VRAM stayed below 4,245 MiB on the RTX and 1,179 MiB on the GTX; sampled temperatures stayed at or below 75°C. Minimum available RAM remained above 50 GiB. See [the complete machine-readable report](benchmarks/results/rtx3060-wan-video.json), which includes each case's actual placement, cooling time and limitations. No new package, model, driver or system power change was required.
+
+### Full-resolution confirmation, caching off
+
+A matched 832×480, 53-frame (3.3125-second) pair at the original 170 W cap sampled in **844.31 → 421.24 seconds** (~2.00× sampling speed). The sum of load/sample and decode/export stages fell **961.03 → 528.35 seconds** (~1.82×). Both used the same seed, prompt, BF16 precision, 30-step UniPC/simple schedule and both-card mapping. The new profile combines INT8 attention, the smaller donor allocation and precise cooling pauses; do not attribute the whole gain to one kernel.
+
+Both completed finite sampling and FP32 VAE decoding. Frames show similar composition with numerical/geometry differences from INT8; no quality-equivalence claim. Peak sampled RTX usage rose from 5,302 to 6,145 MiB while GTX usage fell from 1,178 to 354 MiB, staying within reserves. Sampled maximum temperature was 76°C in both. [Full-resolution report](benchmarks/results/rtx3060-wan-highres.json).
+
+### Separate, explicitly authorized power experiment
+
+`benchmarks/temporary_power_limit.py` is a standalone administrator utility, **not** part of ComfyUI startup or the quality recipe. The user separately approved testing 130 W versus the board's original 170 W limit. Its results are independent of the software-only tables above.
+
+It defaults to a read-only plan. With `--run`, it accepts only a lower cap within the reported hardware limits, verifies the exact RTX 3060 12 GB UUID, and restores the original limit in `finally`, on SIGINT/SIGTERM, or after a bounded timer (default 900 s; maximum 1800 s). Restoration has readback and retries. Model code is never run as root. No fan, manual clock, driver or display changes are made. Forced termination cannot run Python cleanup; verify the actual cap after any interruption.
+
+Inspect the helper's dry-run plan first. When explicitly choosing this experiment, authenticate for the isolated system-Python helper only; run the comparison worker normally in another process:
+
+```bash
+pkexec /usr/bin/python3 -I /absolute/path/benchmarks/temporary_power_limit.py \
+  --primary GPU-RTX-UUID --watts 130 --seconds 900 \
+  --stop-file /tmp/my-wan-power-test-done --run
+```
+
+Creating the chosen stop file ends the experiment and restores the original cap. An already-existing stop file is rejected before any write. The NVIDIA [power-limit documentation](https://docs.nvidia.com/deploy/nvidia-smi/) describes its administrator requirement and allowed hardware range. This experiment is not an overclock and is not automatically recommended as faster.
+
+## Reproduce the small kernel probe
+
+```bash
+/path/to/ComfyUI/.venv/bin/python benchmarks/attention_probe.py \
+  --primary GPU-RTX-UUID
+# Add --run --output attention-results.json for the actual bounded probe.
+```
+
+Run it while no video render is active. Its 75°C stop is intentionally below the generation workers' 82°C cutoff. Unsupported optional backends are recorded as unavailable. No result is substituted for an unexecuted test.
+
+## Validation and rollback
+
+CPU-only tests: `python -m unittest discover -s tests -v` (28 passed). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling and restoring the original power cap on completion/interruption. Actual finite-tensor/MP4 and visual checks complement those tests.
+
+Remove `--wan-performance` to restore the prior launch flags. Select PyTorch attention and remove/bypass EasyCache to restore baseline model patches. Original FP32 weights and earlier videos remain separate. This work does not fix or retest the known NVIDIA suspend/resume issue.
+
+## Primary sources
+
+- [ComfyUI Model Attention Backend and compute-dtype nodes](https://github.com/Comfy-Org/ComfyUI/blob/master/comfy_extras/nodes_model_advanced.py)
+- [ComfyUI native EasyCache](https://github.com/Comfy-Org/ComfyUI/blob/master/comfy_extras/nodes_easycache.py)
+- [Comfy Kitchen](https://github.com/Comfy-Org/comfy-kitchen)
+- [PyTorch SDPA and backend selection](https://docs.pytorch.org/docs/main/generated/torch.nn.functional.scaled_dot_product_attention.html)
+- [SageAttention hardware/build requirements](https://github.com/thu-ml/SageAttention)
+- [TeaCache's Wan2.1 experiments](https://github.com/ali-vilab/TeaCache/tree/main/TeaCache4Wan2.1) (A800 figures are not RTX 3060 results; its thresholds are not interchangeable with EasyCache)

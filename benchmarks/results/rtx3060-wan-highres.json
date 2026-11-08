@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-08",
+  "native_shape": [
+    832,
+    480,
+    53
+  ],
+  "fps": 16,
+  "duration_seconds": 3.3125,
+  "model": "existing Wan2.1 T2V1.3B, BF16 UNet/FP32 VAE",
+  "cache": "off in both",
+  "cases": [
+    {
+      "case": "preserved_baseline",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 832,
+        "height": 480,
+        "frames": 53,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple"
+      },
+      "power_limit_watts": 170,
+      "requested_donor_gib": 1.0,
+      "sampling_seconds": 844.307639572,
+      "sampling_cooling_seconds": 434.559149106994,
+      "stage_wall_seconds": 961.0317541639997,
+      "decode_seconds": 103.97070553399999,
+      "decode_cooling_seconds": 40.66391133600018,
+      "finite_sample_and_decode": true,
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 1178,
+          "temperature_c": 48
+        },
+        "RTX3060": {
+          "used_mib": 5302,
+          "temperature_c": 76
+        }
+      }
+    },
+    {
+      "case": "native_int8_smaller_donor_precise_pacing",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 832,
+        "height": 480,
+        "frames": 53,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "virtual_vram_gb": 0.25,
+        "cache_threshold": 0.0,
+        "thermal_fence": "compute-stream pacing; full drain only before cooling"
+      },
+      "power_limit_watts": 170,
+      "requested_donor_gib": 0.25,
+      "sampling_seconds": 421.24184871499983,
+      "sampling_cooling_seconds": 157.6473136519944,
+      "stage_wall_seconds": 528.3496805210007,
+      "decode_seconds": 93.97798025500015,
+      "decode_cooling_seconds": 32.470625365998785,
+      "finite_sample_and_decode": true,
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 354,
+          "temperature_c": 46
+        },
+        "RTX3060": {
+          "used_mib": 6145,
+          "temperature_c": 76
+        }
+      }
+    }
+  ],
+  "sampling_speed_ratio": 2.004329916762934,
+  "stage_wall_speed_ratio": 1.8189312676716967,
+  "limitations": [
+    "One sequential pair with matched shape,prompt,seed,sampler,steps and170W power cap.",
+    "Combined optimization: nativeINT8,smaller donor and precise cooling timing; not an attribution to one change.",
+    "INT8 changes numerical output; visually checked frames show similar composition, not pixel equivalence or objective quality equality.",
+    "This is a3.3125s test; ten-second coherence and timing remain separate pending renders."
+  ]
+}

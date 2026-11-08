@@ -1,0 +1,85 @@
+{
+  "primary": "NVIDIA GeForce RTX 3060 12GB",
+  "tokens": [
+    4096,
+    16384
+  ],
+  "batch": 2,
+  "heads": 12,
+  "head_dim": 128,
+  "dtype": "bfloat16",
+  "repeats": 3,
+  "note": "Synthetic kernel timing including quantization; not whole-video speed or quality.",
+  "before": {
+    "name": "NVIDIA GeForce RTX 3060",
+    "used_mib": 613,
+    "temperature_c": 51
+  },
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "capability": [
+    8,
+    6
+  ],
+  "results": [
+    {
+      "backend": "pytorch_sdpa",
+      "tokens": 4096,
+      "milliseconds": 9.306112289428711,
+      "finite": true,
+      "relative_rms_error": 0.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "backend": "kitchen_int8",
+      "tokens": 4096,
+      "milliseconds": 3.780949274698893,
+      "finite": true,
+      "relative_rms_error": 0.016171466559171677,
+      "max_abs_error": 0.003662109375
+    },
+    {
+      "backend": "sol_tau_0.5",
+      "tokens": 4096,
+      "milliseconds": 2.2787413597106934,
+      "finite": true,
+      "relative_rms_error": 0.6795504689216614,
+      "max_abs_error": 0.15814208984375
+    },
+    {
+      "backend": "pytorch_sdpa",
+      "tokens": 16384,
+      "milliseconds": 133.04253133138022,
+      "finite": true,
+      "relative_rms_error": 0.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "backend": "kitchen_int8",
+      "tokens": 16384,
+      "milliseconds": 51.81712849934896,
+      "finite": true,
+      "relative_rms_error": 0.016689781099557877,
+      "max_abs_error": 0.001953125
+    },
+    {
+      "backend": "sol_tau_0.5",
+      "tokens": 16384,
+      "milliseconds": 23.733929951985676,
+      "finite": true,
+      "relative_rms_error": 0.6921041011810303,
+      "max_abs_error": 0.07568359375
+    }
+  ],
+  "after_latest": {
+    "name": "NVIDIA GeForce RTX 3060",
+    "used_mib": 2223,
+    "temperature_c": 56
+  },
+  "sdpa_dispatch_operators": [
+    "aten::scaled_dot_product_attention",
+    "aten::_scaled_dot_product_flash_attention",
+    "aten::_flash_attention_forward"
+  ],
+  "peak_torch_bytes": 1107298816
+}

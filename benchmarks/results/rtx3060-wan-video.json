@@ -1,0 +1,354 @@
+{
+  "date": "2026-11-08",
+  "environment": {
+    "comfy_commit": "0decb39ee5b5e17c200334589fc317dbbe98310e",
+    "torch": "2.15.0+cu132",
+    "comfy_kitchen": "0.2.41",
+    "driver": "595.99.02",
+    "primary": "RTX3060 12GB PCI06:00.0",
+    "donor": "GTX1660 6GB PCI05:00.0 PCIe2.0x4"
+  },
+  "cases": [
+    {
+      "case": "performance-sdpa",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "pytorch",
+        "cache_threshold": 0.0
+      },
+      "sampling_seconds": 102.53542124900014,
+      "sampling_cooling_seconds": 0.0,
+      "stage_wall_seconds": 132.11230474400008,
+      "decode_seconds": 17.98328695500004,
+      "native_cache_skipped": "0/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 1773849216,
+        "cuda:1": 1063784960,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 1178,
+          "temperature_c": 45
+        },
+        "RTX3060": {
+          "used_mib": 3470,
+          "temperature_c": 74
+        }
+      },
+      "minimum_available_ram_gib": 50.31735610961914,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "pytorch",
+        "attention": "pytorch",
+        "cache_threshold": 0.0,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    },
+    {
+      "case": "performance-int8",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "cache_threshold": 0.0
+      },
+      "sampling_seconds": 98.13262550200034,
+      "sampling_cooling_seconds": 6.701031402000353,
+      "stage_wall_seconds": 130.16600719500002,
+      "decode_seconds": 19.802232079000078,
+      "native_cache_skipped": "0/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 1773849216,
+        "cuda:1": 1063784960,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 1178,
+          "temperature_c": 47
+        },
+        "RTX3060": {
+          "used_mib": 3473,
+          "temperature_c": 74
+        }
+      },
+      "minimum_available_ram_gib": 51.07246780395508,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "kitchen_int8",
+        "attention": "kitchen_int8",
+        "cache_threshold": 0.0,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    },
+    {
+      "case": "performance-int8-small-donor",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "cache_threshold": 0.0,
+        "virtual_vram_gb": 0.25
+      },
+      "sampling_seconds": 78.74388092000027,
+      "sampling_cooling_seconds": 6.430514119999316,
+      "stage_wall_seconds": 109.79516728900035,
+      "decode_seconds": 18.535637115999634,
+      "native_cache_skipped": "0/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 2581120128,
+        "cuda:1": 256514048,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 354,
+          "temperature_c": 45
+        },
+        "RTX3060": {
+          "used_mib": 4244,
+          "temperature_c": 74
+        }
+      },
+      "minimum_available_ram_gib": 50.975528717041016,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "kitchen_int8",
+        "attention": "kitchen_int8",
+        "cache_threshold": 0.0,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    },
+    {
+      "case": "performance-int8-cache",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "cache_threshold": 0.1
+      },
+      "sampling_seconds": 54.28122397399966,
+      "sampling_cooling_seconds": 0.0,
+      "stage_wall_seconds": 83.34293563799974,
+      "decode_seconds": 18.072274977000234,
+      "native_cache_skipped": "12/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 1773849216,
+        "cuda:1": 1063784960,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 1178,
+          "temperature_c": 47
+        },
+        "RTX3060": {
+          "used_mib": 3408,
+          "temperature_c": 74
+        }
+      },
+      "minimum_available_ram_gib": 51.21332931518555,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "kitchen_int8",
+        "attention": "kitchen_int8",
+        "cache_threshold": 0.1,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    },
+    {
+      "case": "performance-stream-fence",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "cache_threshold": 0.0,
+        "virtual_vram_gb": 0.25,
+        "thermal_fence": "compute-stream during checks, whole-device only when hot"
+      },
+      "sampling_seconds": 88.82922070599989,
+      "sampling_cooling_seconds": 15.927975185997639,
+      "stage_wall_seconds": 119.88160828000082,
+      "decode_seconds": 19.709352533999663,
+      "native_cache_skipped": "0/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 2581120128,
+        "cuda:1": 256514048,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 354,
+          "temperature_c": 45
+        },
+        "RTX3060": {
+          "used_mib": 4222,
+          "temperature_c": 75
+        }
+      },
+      "minimum_available_ram_gib": 51.22984313964844,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "kitchen_int8",
+        "attention": "kitchen_int8",
+        "cache_threshold": 0.0,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    },
+    {
+      "case": "performance-balanced",
+      "settings": {
+        "prompt": "A small red sailboat gently rocking on a calm lake, soft morning light, slow ripples, locked-off camera.",
+        "negative_prompt": "blurry, distorted, flickering, text, watermark",
+        "width": 768,
+        "height": 432,
+        "frames": 17,
+        "fps": 16,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 8.0,
+        "seed": 30601660,
+        "sampler": "uni_pc",
+        "scheduler": "simple",
+        "attention_backend": "kitchen_int8",
+        "cache_threshold": 0.05,
+        "virtual_vram_gb": 0.25,
+        "thermal_fence": "native compute stream; full drain only before cooling"
+      },
+      "sampling_seconds": 53.03109437600051,
+      "sampling_cooling_seconds": 1.9575416779998704,
+      "stage_wall_seconds": 83.34802859699903,
+      "decode_seconds": 19.286547663999954,
+      "native_cache_skipped": "9/30",
+      "parameter_bytes_by_logical_device": {
+        "cuda:0": 2581120128,
+        "cuda:1": 256514048,
+        "cpu": 559104
+      },
+      "sampled_gpu_peaks": {
+        "GTX1660": {
+          "used_mib": 354,
+          "temperature_c": 45
+        },
+        "RTX3060": {
+          "used_mib": 4222,
+          "temperature_c": 74
+        }
+      },
+      "minimum_available_ram_gib": 51.12392807006836,
+      "finite_sample_and_decode": true,
+      "performance": {
+        "requested_attention": "kitchen_int8",
+        "attention": "kitchen_int8",
+        "cache_threshold": 0.05,
+        "cache_window": [
+          0.15,
+          0.85
+        ],
+        "compute_device": "cuda:0",
+        "fallback_reasons": [],
+        "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+      }
+    }
+  ],
+  "placement_and_fence_equality": {
+    "performance-int8__performance-int8-small-donor": {
+      "exactly_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "performance-int8-small-donor__performance-stream-fence": {
+      "exactly_equal": true,
+      "max_abs_difference": 0.0
+    }
+  },
+  "limitations": [
+    "Single sequential run per configuration, not statistical benchmark; thermal starting state differs.",
+    "All cases share shape,seed,prompt,precision and sampler. Only case-specific options/thermal fence vary as recorded.",
+    "INT8 and caching are approximations; cached output changes geometry/composition. No quality equivalence claim.",
+    "Stream fencing alone showed no established speed gain; hot-run cooling time accounts for much of its apparent slowdown.",
+    "Tests use17 frames. Longer generation timings and consistency must be measured separately.",
+    "No model or package downloads; no system graphics/driver/power changes."
+  ]
+}

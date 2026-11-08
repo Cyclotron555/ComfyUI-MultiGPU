@@ -5,6 +5,8 @@
 >
 > Fork maintainers can announce themselves in the [pinned coordination issue](https://github.com/pollockjj/ComfyUI-MultiGPU/issues/223). The repository is not being transferred and no fork is endorsed.
 
+> **Cyclotron555 fork, experimental performance branch:** see [tested Wan performance options](WAN_PERFORMANCE.md) and the [hardware change log](HARDWARE_CHANGELOG.md). RTX 3060 stays primary; GTX 1660 is optional model storage. Defaults preserve native PyTorch attention and disable approximate caching. Original project credit and archive notice remain above.
+
 # ComfyUI-MultiGPU v2: Universal .safetensors and GGUF Multi-GPU Distribution with DisTorch
 <p align="center">
   <img src="https://raw.githubusercontent.com/pollockjj/ComfyUI-MultiGPU/main/assets/distorch_average.png" width="600">

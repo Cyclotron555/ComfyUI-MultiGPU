@@ -16,11 +16,14 @@ def select_gpu(rows, selector):
 
 
 def main():
+    from wan_performance import launch_flags
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--comfy-root', type=Path, required=True)
     parser.add_argument('--primary', default='00000000:06:00.0')
     parser.add_argument('--donor', help='Optional donor UUID or PCI address; RAM only by default')
     parser.add_argument('--launch', action='store_true')
+    parser.add_argument('--wan-performance', action='store_true',
+                        help='Opt in to a Wan BF16 UNet session with native PyTorch attention and static VRAM. Does not enable approximate attention/cache.')
     args = parser.parse_args()
     result = subprocess.run(['nvidia-smi', '--query-gpu=uuid,pci.bus_id,name,memory.total,memory.used,driver_version',
                              '--format=csv,noheader,nounits'], check=True, capture_output=True, text=True, timeout=10)
@@ -42,6 +45,7 @@ def main():
     if not (root / 'main.py').is_file():
         raise ValueError('ComfyUI main.py not found')
     command = [sys.executable, str(root / 'main.py'), '--cuda-device', 'all', '--reserve-vram', '2']
+    command.extend(launch_flags(args.wan_performance))
     print(json.dumps({'physical_gpus': rows, 'logical_mapping': {f'cuda:{i}': r for i, r in enumerate(selected)},
                       'environment': {k: env[k] for k in ('CUDA_DEVICE_ORDER', 'CUDA_VISIBLE_DEVICES', 'MGPU_PRIMARY_DEVICE', 'MGPU_SAFE_OFFLOAD')},
                       'command': command, 'offload': 'cuda:1,cpu' if args.donor else 'cpu',
