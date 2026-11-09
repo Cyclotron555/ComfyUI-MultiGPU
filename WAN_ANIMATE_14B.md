@@ -8,7 +8,7 @@ The four assets total 26.66 GB (decimal). Exact repository revisions, byte sizes
 
 Select the RTX by its exact UUID before importing Torch. For the optional donor trial, expose RTX first and GTX second; logical `cuda:0` then deliberately refers to RTX. Never infer the primary from NVIDIA's physical index. GTX is a weight donor, with RAM fallback; 12GB and 6GB do not become one contiguous 18GB GPU.
 
-Keep a 3GiB core desktop reserve and independently monitor total physical memory: RTX <=9800MiB, GTX <=4800MiB, available RAM >=8GiB. Stop at 82C; worker pacing pauses at 75C and resumes at 67C. Monitor only owned process groups, support a STOP file, and bound each validation stage to 900 seconds. No suspend, display reassignment, driver, power-limit or fan changes are involved.
+Keep a 3GiB core desktop reserve and independently monitor total physical memory: RTX <=9216MiB, GTX <=4800MiB, available RAM >=8GiB. Stop at 82C; worker pacing pauses at 75C and resumes at 67C. Monitor only owned process groups, support a STOP file, and bound each validation stage to 900 seconds. No suspend, display reassignment, driver, power-limit or fan changes are involved.
 
 ## Validation boundary
 
@@ -32,3 +32,9 @@ The donor trial used `cuda:0,5gb;cuda:1,2gb;cpu,*` expert allocation (`gb` is pa
 The larger donor test exposed a headless cleanup crash: `PromptServer.instance` does not exist until the server is initialized. Three extension cleanup entry points now treat an absent instance like `None`. Existing GUI queue behavior is preserved. All 47 CPU safety tests passed, including four new absent-server/idle/active-queue regression checks. ComfyUI core was unchanged. The installed extension was backed up before the fix.
 
 See [the full measurement record](benchmarks/results/rtx3060-wan22-animate14b.json). These results do not establish training support or final karate-video quality.
+
+## Real cats preview status
+
+The current two-cat Animate setup failed visual review with scaled FP8 and original BF16 weights. Removing pose, adding a neutral face, replacing text embeddings with existing FP32 UMT5 output, using full FP32 model computation, changing attention implementations, and disabling asynchronous offloading did not remove corruption. Finite output is not a quality pass. A paired human control still showed background/graphic artifacts, and a protected-background test left the regenerated region corrupt. An exact Animate defect has not been established.
+
+The existing VACE 1.3B model produced a clean short preview from the same cached reference, text and pose data. Use the [VACE preview notes](VACE_CATS_PREVIEW.md) for that validated configuration. Body-motion retargeting and longer choreography remain open work; the [Wan preprocessing guide](https://github.com/Wan-Video/Wan2.2/blob/main/wan/modules/animate/preprocess/UserGuider.md) recommends retargeting when character proportions differ.

@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-09",
+  "core_commit": "0decb39ee5b5e17c200334589fc317dbbe98310e",
+  "extension_base_commit": "fe66ac888e3b470739ef29e38af50088ca58421c",
+  "distorch_2_sha256": "6037557ec3571c68bea446c7801ec95d06131c04f0083fb797aa708409f5a41a",
+  "profile": "../../profiles/wan21_vace_cats_3060.json",
+  "visual_review": {
+    "severe_neon_corruption": false,
+    "photorealistic_cats": true,
+    "background_stable": true,
+    "scope": "five sampled frames of a 17-frame clip; motion/anatomy not production validated"
+  },
+  "sampling": {
+    "guard_seconds": 124.90331899900048,
+    "sampling_seconds": 95.4199871560013,
+    "cooling_seconds": 24.010817745998793,
+    "maximum_gpu_temperature_c": 76,
+    "peak_total_primary_mib": 2374,
+    "peak_total_donor_mib": 1191,
+    "minimum_available_ram_bytes": 53658869760,
+    "logical_parameter_bytes": {
+      "cuda:0": 1085673088,
+      "cpu": 2150425088,
+      "cuda:1": 1073228288
+    }
+  },
+  "decode": {
+    "guard_seconds": 9.33369508100077,
+    "seconds": 4.00404448900008,
+    "finite": true,
+    "shape": [
+      17,
+      512,
+      288,
+      3
+    ],
+    "mean_absolute_frame_change_8bit": 7.373886585235596
+  },
+  "media_and_tensor_fixtures_committed": false,
+  "comparison_boundary": "Different model and guidance/step settings from Animate; not an equivalent-quality speed benchmark. Underlying Animate cause not yet resolved."
+}

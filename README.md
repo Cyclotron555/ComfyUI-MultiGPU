@@ -318,3 +318,8 @@ Opt-in cooling diagnostics, temporary RTX fan/power tests, restoration requireme
 Experimental native VACE conditioning checks and the RTX3060/GTX1660 reference-control recipe are documented in [WAN_PERFORMANCE.md](WAN_PERFORMANCE.md#local-vace-reference-control-tests). Short motion/style tests remain experimental; no automatic model downloads or hardware tuning are added.
 
 Wan 2.2 Animate 14B: [tested RTX 3060/GTX 1660 setup and limits](WAN_ANIMATE_14B.md). Tiny native sampling and decode passed; full-quality character replacement and training remain unvalidated.
+
+
+### Guarded VACE cats preview
+
+A short photographic cats preview now passes the severe-corruption visual check with the existing VACE1.3B model. See [settings, safety limits and reproduction notes](VACE_CATS_PREVIEW.md). The same current Animate setup still fails visual review; finite smoke output does not establish animation quality. Heavy-job isolation tools are available under `tools/`.

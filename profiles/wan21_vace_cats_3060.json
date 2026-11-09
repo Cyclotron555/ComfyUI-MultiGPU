@@ -1,0 +1,62 @@
+{
+  "model": "Wan2.1 VACE 1.3B",
+  "checkpoint": "wan2.1_vace_1.3B_fp16.safetensors",
+  "checkpoint_sha256": "640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2",
+  "status": "short_cats_preview_passed_visual_corruption_check",
+  "primary": {
+    "name": "RTX 3060",
+    "uuid": "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6",
+    "role": "compute and desktop",
+    "core_reserve_gib": 3
+  },
+  "optional_donor": {
+    "name": "GTX 1660",
+    "uuid": "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce",
+    "role": "weight storage only"
+  },
+  "ram_fallback": true,
+  "offload_allocation": "cuda:0,1gb;cuda:1,1gb;cpu,*",
+  "allocation_unit": "GiB",
+  "mapping_requirement": "Expose primary UUID first and donor UUID second before importing Torch; logical cuda:0 is only valid after this mapping.",
+  "compute_dtype": "bfloat16 through native ModelComputeDtype",
+  "safety": {
+    "primary_total_memory_limit_mib": 9216,
+    "donor_total_memory_limit_mib": 4800,
+    "minimum_available_ram_gib": 8,
+    "thermal_pause_c": 75,
+    "thermal_resume_c": 67,
+    "thermal_stop_c": 82,
+    "stage_timeout_seconds": 1800,
+    "isolated_memory_high_gib": 36,
+    "isolated_memory_max_gib": 40,
+    "isolated_swap_max_bytes": 0,
+    "concurrent_jobs": 1
+  },
+  "preview": {
+    "width": 288,
+    "height": 512,
+    "frames": 17,
+    "fps": 16,
+    "steps": 30,
+    "cfg": 6,
+    "shift": 8,
+    "sampler": "uni_pc",
+    "scheduler": "simple",
+    "seed": 30601660
+  },
+  "conditioning": {
+    "reference": "photorealistic two-cat scene, single frame",
+    "control": "two-person body/feet pose video from local motion source",
+    "face": "not used by VACE",
+    "encoded_controls": "raw Wan VAE inactive/gray video, reactive/pose video and reference; prepare_conditioning adds the reference prefix",
+    "reference_trim_latents": 1
+  },
+  "training_ready": false,
+  "long_form_validated": false,
+  "limitations": [
+    "One short silent clip only; initial hold and later movement",
+    "Paw anatomy, identity over longer clips and accurate choreography remain unvalidated",
+    "Animate14B remains visually rejected for the current cats setup"
+  ],
+  "results": "../benchmarks/results/rtx3060-wan21-vace-cats.json"
+}
