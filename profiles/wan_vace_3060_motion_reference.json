@@ -1,0 +1,30 @@
+{
+  "model": "wan2.1_vace_1.3B_fp16.safetensors",
+  "sha256": "640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2",
+  "primary_role": "RTX3060 compute/display, select exactUUID beforeCUDAinitialization",
+  "donor_role": "GTX1660 weightstorage only; RAMfallback",
+  "width": 832,
+  "height": 480,
+  "frames": 17,
+  "fps": 16,
+  "steps": 30,
+  "cfg": 6.0,
+  "shift": 8.0,
+  "sampler": "uni_pc",
+  "scheduler": "simple",
+  "attention": "pytorch",
+  "cache_threshold": 0.0,
+  "virtual_vram_gb": 1.0,
+  "desktop_reserve_gib": 2.0,
+  "thermal_worker": {
+    "pause_at": 75,
+    "resume_at": 67,
+    "cutoff": 82,
+    "telemetry_backend": "nvml"
+  },
+  "control": "Existing49-frame walking reference -> nativeKorniaCanny0.4/0.8 -> existingFP32WanVAE -> coreVACEconditioning",
+  "appearance_reference": false,
+  "status": "Paused experimentalnative480ppreview;17framescomplete.53framegaitvalidationintentionallystoppedandmustrestart; no completed10s animewalk.",
+  "integration": "OptionalpreencodedCPUconditioninghelper; existingnativeWanVaceToVideo remains standardGUIroute. Noautomaticdownload or hardware tuning.",
+  "next_validation_frames": 53
+}

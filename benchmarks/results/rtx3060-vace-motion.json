@@ -1,0 +1,1157 @@
+{
+  "status": "Completed short experiments; resumed53framevalidation is still running",
+  "updated": "2026-11-09T10:57:43.648811-06:00",
+  "download": {
+    "file": "ComfyUI/models/diffusion_models/wan2.1_vace_1.3B_fp16.safetensors",
+    "bytes": 4309519800,
+    "sha256": "640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2",
+    "seconds": 62.46994722599993,
+    "user_approved": true
+  },
+  "runs": {
+    "vace-probe": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 17,
+          "fps": 16,
+          "steps": 3,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            5,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            5,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 6.565845634000652,
+        "latent_shape": [
+          1,
+          16,
+          5,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 0.0,
+        "thermal_pauses": 0,
+        "maximum_guard_temperature_c": 59,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3687856128
+      },
+      "decode": {
+        "seconds": 8.258115339000142,
+        "frames": 17,
+        "shape": [
+          17,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 90.25106737335891,
+        "mean_frame_change": 7.219445546468099,
+        "peak_gpu_bytes": 1940281856,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 0.0
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 16.272235649999857,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 10.168974479000099,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 40
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 4295,
+          "temperature_c": 61
+        }
+      },
+      "minimum_ram_available_gib": 51.118831634521484
+    },
+    "vace-anime-preview": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": true,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 1,
+          "mask_shape": [
+            1,
+            64,
+            14,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            14,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 149.06548206799926,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 25.017153489996417,
+        "thermal_pauses": 29,
+        "maximum_guard_temperature_c": 75,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4364875776
+      },
+      "decode": {
+        "seconds": 21.10537614199893,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 53.477786546903154,
+        "mean_frame_change": 19.266373151614342,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 2.7517586899975868
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 158.38947659100086,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 24.402660038998874,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 44
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 4929,
+          "temperature_c": 75
+        }
+      },
+      "minimum_ram_available_gib": 51.10969924926758
+    },
+    "vace-native-preview": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "OfficialKorniaCanny0.4/0.8"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            13,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            13,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 189.72589747999882,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 50.53921959601212,
+        "thermal_pauses": 51,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4290131968
+      },
+      "decode": {
+        "seconds": 24.458957112999997,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 70.81347996173771,
+        "mean_frame_change": 19.22321159456983,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 6.25274120800168
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 199.01765301699925,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 26.43909716900089,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 46
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 4829,
+          "temperature_c": 75
+        }
+      },
+      "minimum_ram_available_gib": 50.91843795776367
+    },
+    "vace-small-donor": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "OfficialKorniaCanny0.4/0.8"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            13,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            13,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 4051976832,
+          "cuda:1": 256514048,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 206.5322495399996,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 84.55773537299683,
+        "thermal_pauses": 84,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 5096518144
+      },
+      "decode": {
+        "seconds": 27.695180758000788,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 70.81347996173771,
+        "mean_frame_change": 19.22321159456983,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 9.507083075999617
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 215.2461417279992,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 30.510948174000077,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 47
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 5653,
+          "temperature_c": 76
+        }
+      },
+      "minimum_ram_available_gib": 52.36127471923828
+    },
+    "vace-rootless-cooling": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 77,
+          "thermal_resume_at": 72,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "OfficialKorniaCanny0.4/0.8",
+          "thermal_cutoff": 80
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            13,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            13,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 4051976832,
+          "cuda:1": 256514048,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 189.88614782900004,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 67.52628382199873,
+        "thermal_pauses": 135,
+        "maximum_guard_temperature_c": 78,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 5096518144
+      },
+      "decode": {
+        "seconds": 38.079377551001016,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 70.81347996173771,
+        "mean_frame_change": 19.22321159456983,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 19.759281093000027
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 197.87579457799984,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 40.02859962799994,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 354,
+          "temperature_c": 48
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 5653,
+          "temperature_c": 78
+        }
+      },
+      "minimum_ram_available_gib": 50.209835052490234
+    },
+    "vace-subject-guide": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "Subject-focused nativeCanny, removes long road lines, fixed ground line280; manually framed for this reference only",
+          "control_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            13,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            13,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 252.8947847670006,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 113.32748484100739,
+        "thermal_pauses": 86,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4290131968
+      },
+      "decode": {
+        "seconds": 32.49862375900011,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 77.98425076104877,
+        "mean_frame_change": 2.629219431936005,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 14.257788934997734
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 261.9552666039999,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 34.56638068199936,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 49
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 4829,
+          "temperature_c": 76
+        }
+      },
+      "minimum_ram_available_gib": 51.04658889770508
+    },
+    "vace-rgb-probe": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 17,
+          "fps": 16,
+          "steps": 20,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "FullRGBwalkingreference;noedgefilter; VACErepaintingtest"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            5,
+            36,
+            64
+          ],
+          "control_shape": [
+            1,
+            32,
+            5,
+            36,
+            64
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 40.670624312000655,
+        "latent_shape": [
+          1,
+          16,
+          5,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 0.0,
+        "thermal_pauses": 0,
+        "maximum_guard_temperature_c": 70,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3689691136
+      },
+      "decode": {
+        "seconds": 8.344018820000201,
+        "frames": 17,
+        "shape": [
+          17,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 63.37680484468703,
+        "mean_frame_change": 9.496864036277488,
+        "peak_gpu_bytes": 1940281856,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 0.0
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 50.87145500299994,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 10.169195022999702,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 46
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 4295,
+          "temperature_c": 70
+        }
+      },
+      "minimum_ram_available_gib": 49.528350830078125
+    },
+    "vace-native480": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 832,
+          "height": 480,
+          "frames": 17,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "pytorch",
+          "virtual_vram_gb": 1.0,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 1.0,
+          "source_mode": "VACE edge-video conditioning",
+          "reference_frames": "Existinglocalgeneratedreference/derivedcontrols;notuploaded",
+          "reference_style": false,
+          "control_strength": 1.0,
+          "model": "wan2.1_vace_1.3B_fp16.safetensors",
+          "control_preprocess": "Native480p KorniaCanny0.4/0.8 fullscene"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "pytorch",
+          "attention": "pytorch",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "vace_control": {
+          "trim": 0,
+          "mask_shape": [
+            1,
+            64,
+            5,
+            60,
+            104
+          ],
+          "control_shape": [
+            1,
+            32,
+            5,
+            60,
+            104
+          ]
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 3244705920,
+          "cuda:1": 1063784960,
+          "cpu": 835584
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 223.39860953300195,
+        "latent_shape": [
+          1,
+          16,
+          5,
+          60,
+          104
+        ],
+        "finite": true,
+        "cooling_seconds": 77.80211773000337,
+        "thermal_pauses": 69,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 4331440128
+      },
+      "decode": {
+        "seconds": 28.134098966998863,
+        "frames": 17,
+        "shape": [
+          17,
+          480,
+          832,
+          3
+        ],
+        "finite": true,
+        "frame_std": 57.55256201164668,
+        "mean_frame_change": 11.283663549178685,
+        "peak_gpu_bytes": 2024167936,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 9.25536245200783
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 233.53719882899895,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 30.509789527997782,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "sampled_gpu_peaks": {
+        "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce": {
+          "memory_mib": 1178,
+          "temperature_c": 48
+        },
+        "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6": {
+          "memory_mib": 8077,
+          "temperature_c": 76
+        }
+      },
+      "minimum_ram_available_gib": 51.33293914794922
+    }
+  },
+  "tests": {
+    "standard_library_safety_tests": 43,
+    "native_cpu_conditioning_parity_checks": 5,
+    "native_parity_rechecked_today": true
+  },
+  "quality_findings": {
+    "vace-probe": "Resource/finite test only;3stepsnotqualityvalidation",
+    "vace-anime-preview": "Rejectedsolarizedcolors;Pillowedges/INT8/styleimagechangesconfounded",
+    "vace-native-preview": "Fullbodyanime/referencewalk;grounddistortions",
+    "vace-small-donor": "Identicalframesbutslower;notadopted",
+    "vace-rootless-cooling": "Identicalframesbutnotfasterthancooler1GiBbaseline;notadopted",
+    "vace-subject-guide": "Rejectedfrontpose/poorwalk;scenecontextlost",
+    "vace-rgb-probe": "Rejectedphotographiclook",
+    "vace-native480": "Bestshortpreview:832x48017frames;cleanerfullbodyanimeandsteps;longerQArequired"
+  },
+  "donor_comparison": {
+    "latents_identical": true,
+    "png_bytes_identical": true,
+    "mp4_identical": true,
+    "frames_compared": 49,
+    "baseline_sampling_seconds": 189.72589747999882,
+    "small_donor_sampling_seconds": 206.5322495399996,
+    "baseline_cooling_seconds": 50.53921959601212,
+    "small_donor_cooling_seconds": 84.55773537299683
+  },
+  "rootless_pixel_equality": {
+    "latents_identical": true,
+    "all49_png_identical": true,
+    "mp4_identical": true
+  },
+  "gpu_canny": {
+    "seconds": 8.160897778001527,
+    "frames": 53,
+    "peak_allocated_bytes": 256508416,
+    "maximum_guard_c": 58,
+    "cooling_seconds": 0.0,
+    "reference_compared": true,
+    "changed_pixels": 0,
+    "scope": "Preprocessing only; CPU serial vs GPU batched. Not generation speed."
+  },
+  "cpu_canny_4": {
+    "frames": 4,
+    "seconds": 13.078156523999496,
+    "device": "CPU",
+    "threads": 4,
+    "scope": "load/resize/nativeKorniaCanny/PNGwrite after imports, serial"
+  },
+  "limitations": [
+    "Single sequential runs;temperature/desktop/caseheat confound timings.",
+    "NativeCannyGPU was already core behavior; optimization affects our external preparation only.",
+    "No accepted10secondanimewalk; current53frametest incomplete.",
+    "ExistingmotionreferenceisAIgenerated;realwalkingfootagewouldbetterguidebiomechanics.",
+    "No newVACE speedgainwasadopted. EarlierT2V12percentresultdoesnotgeneralizetoVACE.",
+    "OptionalpreencodedCPUconditioninghelper;notaregisterednode/fullGUIworkflow.",
+    "No driver/display/suspend/power/fan settingschanged forVACEtests."
+  ]
+}

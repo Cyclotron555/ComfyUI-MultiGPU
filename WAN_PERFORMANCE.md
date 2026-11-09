@@ -128,7 +128,7 @@ Run it while no video render is active. Its 75°C stop is intentionally below th
 
 ## Validation and rollback
 
-CPU-only tests: `python -m unittest discover -s tests -v` (42 passed, including the cooling additions). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling, restoring the original power cap on completion/interruption and a read-only long-render plan. Actual finite-tensor/MP4 and visual checks complement those tests.
+CPU-only tests: `python -m unittest discover -s tests -v` (43 passed, including the cooling additions). The new tests cover clone isolation, nonzero compute-device mapping, unavailable native kernels, missing optional cache, invalid cache windows, unchanged baseline launch flags, thermal cutoff/timeout handling, restoring the original power cap on completion/interruption and a read-only long-render plan. Actual finite-tensor/MP4 and visual checks complement those tests.
 
 Remove `--wan-performance` to restore the prior launch flags. Select PyTorch attention and remove/bypass EasyCache to restore baseline model patches. Original FP32 weights and earlier videos remain separate. This work does not fix or retest the known NVIDIA suspend/resume issue.
 
@@ -206,4 +206,47 @@ The anime recipe is a separate creative test. Its motion-first prompt andCFG6/sh
 
 Short creative tests are separate from the exact-quality thermal benchmark. The first text-only anime clip achieved its look but stood still. A motion-first text prompt produced a cropped, overly saturated character and the user rejected the walking cycle. Existing-video latent initialization at denoise0.12 and0.30 retained more reference motion but stayed predominantly photographic, with background distortions in the stronger pass. None is accepted as a finished anime walking result, and no10-second anime render was allowed to continue from those rejected previews. Audio has not been mixed.
 
-See the [creative-test report](benchmarks/results/rtx3060-anime-motion-tests.json). The nativeT2V recipe is experimental, not a gait-quality guarantee. A proposed next test uses the existing core `WanVaceToVideo` path with a reference/control video and the official [VACE1.3B FP16 model](https://huggingface.co/Comfy-Org/Wan-2.1/blob/main/split_files/diffusion_models/wan2.1_vace_1.3B_fp16.safetensors), a4.31GB additional checkpoint. Existing text encoder and WanVAE can be reused. No VACE weights have been downloaded: explicit approval was requested under the user's earlier model-download restriction. Planned initial test is512×288,17frames,3steps with UUID-pinnedRTX compute and optionalGTX weight donor, then short gait/style QA before longer work. ComfyUI's [officialVACE guide](https://docs.comfy.org/tutorials/video/wan/vace) describes reference-video motion transfer; this proposed local integration is not yet tested. All render and administrator-helper processes have exited; independent readback confirmed original170W and automaticRTX fans.
+See the [creative-test report](benchmarks/results/rtx3060-anime-motion-tests.json). The nativeT2V recipe is experimental, not a gait-quality guarantee. A proposed next test uses the existing core `WanVaceToVideo` path with a reference/control video and the official [VACE1.3B FP16 model](https://huggingface.co/Comfy-Org/Wan-2.1/blob/main/split_files/diffusion_models/wan2.1_vace_1.3B_fp16.safetensors), a4.31GB additional checkpoint. Existing text encoder and WanVAE can be reused. The user subsequently approved the additional model download; it was verified against SHA256 before installation. The local VACE tests are described below. Planned initial test is512×288,17frames,3steps with UUID-pinnedRTX compute and optionalGTX weight donor, then short gait/style QA before longer work. ComfyUI's [officialVACE guide](https://docs.comfy.org/tutorials/video/wan/vace) describes reference-video motion transfer; this proposed local integration is not yet tested. All render and administrator-helper processes have exited; independent readback confirmed original170W and automaticRTX fans.
+
+
+## Local VACE reference-control tests
+
+The separately approved `wan2.1_vace_1.3B_fp16.safetensors` is4,309,519,800bytes, SHA256`640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2`. It is stored beside the originalT2V weights; no original checkpoint was replaced. The existing localFP32WanVAE andCPUUMT5 embeddings were reused. No additional dependency, driver, display, fan or power changes were made.
+
+`wan_vace_reference.prepare_conditioning` is an optional **external-worker utility** forCPU-resident, pre-encoded controls. Initialize ComfyUI/options before importing it. It produces the same control tensors, masks, neutral-reference latent and trim count as core `WanVaceToVideo`, for one batch and an optional single appearance image. It does not load models, download weights, register a node, add pose estimation, or replace the general native node. Arbitrary editing masks are outside this narrow helper. Core VACE remains responsible for latent normalization and model execution.
+
+Five CPU-only checks compare the helper to the installed native node, including reference/no-reference cases and valid non-UI geometry/strength values. Run with the ComfyUI Python environment:
+
+```bash
+/path/to/ComfyUI/.venv/bin/python benchmarks/check_vace_conditioning.py \
+  --comfy-root /path/to/ComfyUI
+```
+
+The script explicitly selectsCPU before importing core. The existing standard-library suite separately passes43tests. GPU experiments use explicitRTX/GTXUUID ordering,2GiBdesktop reserve,8GiBminimum availableRAM,10GiBRTX/5GiBGTXmemory stops, bounded worker runtimes and cooperativeSTOP cancellation. Both base and VACE block sequences receive worker-local thermal checks; core model code is unchanged.
+
+The17-frame,3-step PyTorch probe completed finite sampling/decoding (sampling6.57s,maximum guard59°C). A49-frame512×288 full-sceneCanny/PyTorch/no-reference test produced a full-body anime walk, but ground distortions remain. A rougher edge guide plusINT8 and an appearance image produced solarized output and was rejected; those simultaneous changes do not identify one culprit. A subject-only guide lost side-view pose consistency, andRGB control stayed too photographic. Native480p testing is in progress; none of these is a completed10-second production-quality walk.
+
+For identical49-frame Canny/PyTorch inputs,1GiBGTX storage sampled in189.73s versus206.53s with0.25GiB, because cooling waits increased. A0.25GiB77/72°C worker pilot with a stricter80°C stop sampled in189.89s and reached78°C. Both candidates preserved identical latents, all49PNG frames andMP4 bytes, but neither beat the cooler1GiB75/67°C baseline, so neither is recommended as a VACE speed improvement. The earlierT2V12% result must not be generalized to VACE. Timings are single sequential runs and sensitive to case heat and foreground activity.
+
+The [experimental VACE recipe](profiles/wan_vace_3060_motion_reference.json) records the tested baseline. It is a recipe, not an installed GUI workflow or an end-to-end standalone renderer. Our headless tests emit an unused optional replacements-node warning because noPromptServer instance exists; required nativeWan/VACE paths run. FullGUI queue integration and long VACE clips have not been tested.
+
+
+### Pause checkpoint
+
+VACEtestingpausedattheuserrequest. Thebestcompletednative832×480previewhas17frames (1.0625s). The53frame/30step3.3125svalidationwasintentionallystopped; itscontrols/settingsarepreserved,butitmustrestartfromseed. Itisnotacompletedlongclip. Allrenderworkersandtemporaryadministratorhelpersexited;RTX170W/automaticfansverified. NewGPUCannyprobeproduced53identicalCPU-referenceguidesin8.16s,peak244.6MiB,max58°C;thisimprovesexternalpreparation,notcoreComfyUIgeneration. Subject-onlyandRGBguideswerequalityregressionsandwerenotadopted. Audioexistsonlyasseparateproceduralprototypestems,notamixedorvalidatedsoundtrack.
+
+
+### November 9 restart
+
+The user resumed the stopped 53-frame test in a fresh output directory, reusing the verified controls and embeddings. The five native-conditioning parity checks passed again against the unchanged core commit. The older stopped attempt remains preserved. The VACE trials and rejected variants are recorded in [the measurement report](benchmarks/results/rtx3060-vace-motion.json); its current status explicitly distinguishes completed short tests from the ongoing three-second validation. The source helper adds no GUI node or automatic download.
+
+The optional GPU preprocessing probe uses core Canny directly and verifies pixels against an existing CPU guide sequence:
+
+```bash
+/path/to/ComfyUI/.venv/bin/python benchmarks/vace_canny_probe.py \
+  --comfy-root /path/to/ComfyUI --primary GPU-RTX-UUID \
+  --source-dir /path/to/frames --output-dir /path/to/fresh-guides \
+  --reference-dir /path/to/cpu-guides --frames 53 --run
+```
+
+Without `--run`, it only prints a plan. It selects the UUID before CUDA initialization, limits batches, checks temperature and free desktop memory, and refuses to overwrite outputs. The tested 53-frame GPU preparation took 8.16 seconds with zero changed pixels versus the CPU guides. A separate four-frame CPU run took 13.08 seconds; differing frame counts do not support a direct speed ratio. This is preprocessing, not model inference acceleration.
