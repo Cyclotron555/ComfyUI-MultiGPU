@@ -20,7 +20,7 @@
     "timeout_seconds": 120,
     "telemetry_backend": "nvml"
   },
-  "note": "Explicit UUID mapping required: RTX3060 compute/display, GTX1660 optional weight donor. Native Wan1.3B; no step cache, interpolation, upscaling or reduced step count. Recipe only: loading this JSON does not alter fans/power or create a ComfyUI workflow. NVML temperature backend is opt-in and fails closed on unavailable/failed telemetry. Extended161-frame motion quality must be visually reviewed. Software77/72C pilot is explicitly opt-in; general default75/67C is unchanged. Short anime style preview was visually successful but lacked walking; motion-first prompt is being validated, and the intended161-frame final has not completed.",
+  "note": "Explicit UUID mapping required: RTX3060 compute/display, GTX1660 optional weight donor. Native Wan1.3B; no step cache, interpolation, upscaling or reduced step count. Recipe only: loading this JSON does not alter fans/power or create a ComfyUI workflow. NVML temperature backend is opt-in and fails closed on unavailable/failed telemetry. Extended161-frame motion quality must be visually reviewed. Software77/72C pilot is explicitly opt-in; general default75/67C is unchanged. Short anime style preview was visually successful but lacked walking; motion-first prompt is being validated, and the intended161-frame final has not completed. No accepted10-second anime walking result exists. Creative gait tests must pass before this text-only recipe is used for an expensive long render.",
   "prompt": "A young adult man is WALKING briskly to the right along a park path, taking continuous visible steps. His left and right legs alternate, knees bend, each foot lifts then lands ahead, and his arms swing naturally with every step. Side-view tracking camera follows his walking movement. Japanese hand-drawn 2D anime animation, blue jacket and beige trousers, crisp outlines, cel shading, softly painted green trees, fluid character animation.",
   "negative_prompt": "standing still, static pose, frozen body, still image, photorealistic, live action, 3D render, blurry, distorted anatomy, extra limbs, text, watermark",
   "width": 832,
@@ -42,5 +42,6 @@
     "resume_at": 67,
     "cutoff": 82,
     "telemetry_backend": "nvml"
-  }
+  },
+  "creative_validation_status": "Rejected text-only walking previews: static pose or poor gait/cropped framing. Not production-ready; VACE reference-control test awaiting model download approval."
 }

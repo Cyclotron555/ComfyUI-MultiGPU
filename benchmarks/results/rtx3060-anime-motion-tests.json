@@ -1,0 +1,486 @@
+{
+  "status": "No accepted anime walking result yet; VACE download approval pending",
+  "tests": {
+    "anime_style_static": {
+      "sampling": {
+        "settings": {
+          "prompt": "Japanese anime style, hand-drawn 2D animation, crisp expressive outlines, beautiful cel shading and a softly painted background. Full-body side view of one young adult man with short dark hair, wearing a blue jacket, beige trousers and dark shoes, walking naturally from left to right along a peaceful tree-lined park path. Clear alternating steps and gentle arm swing, consistent character design, head and both feet visible, steady side-on camera, warm afternoon light, polished animated film composition.",
+          "negative_prompt": "photorealistic, live action, 3D render, blurry, distorted, flickering, text, watermark, deformed anatomy, extra limbs, missing limbs, sliding feet, unnatural gait",
+          "width": 512,
+          "height": 288,
+          "frames": 33,
+          "fps": 16,
+          "steps": 20,
+          "cfg": 5.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 130,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": 90,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 34.41747911299899,
+        "latent_shape": [
+          1,
+          16,
+          9,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 0.0,
+        "thermal_pauses": 0,
+        "maximum_guard_temperature_c": 71,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3199611904
+      },
+      "decode": {
+        "seconds": 14.06972936999955,
+        "frames": 33,
+        "shape": [
+          33,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 66.0605506445883,
+        "mean_frame_change": 1.253872765435113,
+        "peak_gpu_bytes": 1964726784,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 0.0
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 42.83976542699929,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 16.257665474999158,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      }
+    },
+    "anime_text_motion_bad_gait": {
+      "sampling": {
+        "settings": {
+          "prompt": "A young adult man is WALKING briskly to the right along a park path, taking continuous visible steps. His left and right legs alternate, knees bend, each foot lifts then lands ahead, and his arms swing naturally with every step. Side-view tracking camera follows his walking movement. Japanese hand-drawn 2D anime animation, blue jacket and beige trousers, crisp outlines, cel shading, softly painted green trees, fluid character animation.",
+          "negative_prompt": "standing still, static pose, frozen body, still image, photorealistic, live action, 3D render, blurry, distorted anatomy, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601661,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 133.3036724270005,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 62.533076767997045,
+        "thermal_pauses": 57,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3430102016
+      },
+      "decode": {
+        "seconds": 29.758305711000503,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 99.48420007177845,
+        "mean_frame_change": 27.21833320900246,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 10.755519926997295
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "encode",
+            "seconds": 36.81449131500085,
+            "exit_code": 0
+          },
+          {
+            "stage": "sample",
+            "seconds": 142.2050854680001,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 32.54550010799903,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "wan-video-text.json": {
+        "seconds": 34.62900645800073,
+        "device": "cpu",
+        "dtype": "float32",
+        "shape": [
+          1,
+          512,
+          4096
+        ],
+        "local_only": true
+      }
+    },
+    "reference_denoise012_photographic": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 0.12,
+          "source_mode": "video-to-video latent initialization; no hard pose control",
+          "reference_frames": "Existing locally generated realistic walking PNG frames; not uploaded"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 94.56163343600019,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 24.512156128999777,
+        "thermal_pauses": 27,
+        "maximum_guard_temperature_c": 76,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3432199680
+      },
+      "decode": {
+        "seconds": 23.50366215899885,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 48.607776406613446,
+        "mean_frame_change": 8.969587679262515,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 4.753117182999631
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "encode",
+            "seconds": 36.81630937900081,
+            "exit_code": 0
+          },
+          {
+            "stage": "reference",
+            "seconds": 12.226600526999391,
+            "exit_code": 0
+          },
+          {
+            "stage": "sample",
+            "seconds": 103.1988572779992,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 26.442164998999942,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      },
+      "wan-reference-encode.json": {
+        "seconds": 6.552591460998883,
+        "input_frames": 49,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "dtype": "float32",
+        "local_only": true,
+        "stochastic_posterior_sampling": false,
+        "cooling_seconds": 0.0,
+        "peak_allocated_bytes": 2930208768
+      },
+      "wan-video-text.json": {
+        "seconds": 34.206434079000246,
+        "device": "cpu",
+        "dtype": "float32",
+        "shape": [
+          1,
+          512,
+          4096
+        ],
+        "local_only": true
+      }
+    },
+    "reference_denoise030_insufficient_style": {
+      "sampling": {
+        "settings": {
+          "prompt": "Hand-drawn Japanese anime film. An adult gray-haired man in a blue jacket and beige trousers walks naturally along a leafy park path. Fine expressive ink outlines, refined cel shading, softly painted backgrounds, gentle natural colors, detailed character animation, full-body side view with head and both feet visible.",
+          "negative_prompt": "photorealistic, live action, 3D render, neon colors, extreme saturation, cropped head, cropped feet, malformed limbs, extra limbs, text, watermark",
+          "width": 512,
+          "height": 288,
+          "frames": 49,
+          "fps": 16,
+          "steps": 30,
+          "cfg": 6.0,
+          "shift": 8.0,
+          "seed": 30601660,
+          "sampler": "uni_pc",
+          "scheduler": "simple",
+          "attention_backend": "kitchen_int8",
+          "virtual_vram_gb": 0.25,
+          "cache_threshold": 0.0,
+          "thermal_fence": "compute-stream pacing; full drain only before cooling",
+          "expected_power_limit_watts": 170,
+          "telemetry_backend": "nvml",
+          "style": "Japanese hand-drawn 2D anime",
+          "temporary_fan_percent": null,
+          "thermal_pause_at": 75,
+          "thermal_resume_at": 67,
+          "preview_only": true,
+          "denoise": 0.3,
+          "source_mode": "video-to-video latent initialization; no hard pose control",
+          "reference_frames": "Existing locally generated realistic walking PNG frames; not uploaded"
+        },
+        "primary": "RTX 3060",
+        "donor": "cuda:1",
+        "dtype": "bfloat16-unet/float32-vae",
+        "downloads": false,
+        "performance": {
+          "requested_attention": "kitchen_int8",
+          "attention": "kitchen_int8",
+          "cache_threshold": 0.0,
+          "cache_window": [
+            0.15,
+            0.85
+          ],
+          "compute_device": "cuda:0",
+          "fallback_reasons": [],
+          "note": "Opt-in approximations require a matched visual test; no universal speed or quality guarantee."
+        },
+        "actual_sigma_max": 0.774193525314331,
+        "parameter_bytes_before_sampling": {
+          "cuda:0": 2581120128,
+          "cuda:1": 256514048,
+          "cpu": 559104
+        },
+        "parameter_dtypes": [
+          "torch.bfloat16",
+          "torch.float32"
+        ],
+        "passed": true,
+        "sampling_seconds": 84.6183382520012,
+        "latent_shape": [
+          1,
+          16,
+          13,
+          36,
+          64
+        ],
+        "finite": true,
+        "cooling_seconds": 17.011356609003997,
+        "thermal_pauses": 21,
+        "maximum_guard_temperature_c": 75,
+        "telemetry_backend": "nvml",
+        "peak_allocated_bytes": 3432199168
+      },
+      "decode": {
+        "seconds": 22.016880444998606,
+        "frames": 49,
+        "shape": [
+          49,
+          288,
+          512,
+          3
+        ],
+        "finite": true,
+        "frame_std": 49.72883282405538,
+        "mean_frame_change": 9.926551206612293,
+        "peak_gpu_bytes": 1991880704,
+        "device": "RTX 3060",
+        "dtype": "float32",
+        "cooling_seconds": 3.2513582369992946
+      },
+      "run": {
+        "stages": [
+          {
+            "stage": "sample",
+            "seconds": 93.42089393199967,
+            "exit_code": 0
+          },
+          {
+            "stage": "decode",
+            "seconds": 24.407195824000155,
+            "exit_code": 0
+          }
+        ],
+        "passed": true
+      }
+    }
+  },
+  "quality_findings": {
+    "anime_style_static": "Anime appearance achieved; character standing rather than walking. Long attempt stopped.",
+    "anime_text_motion_bad_gait": "Walking motion produced but head cropped, oversaturated appearance and user rejected gait/foot contact. Not accepted.",
+    "reference_denoise012_photographic": "Encoded existing realistic walking frames and initialized nativeWan sampler. Motion closer to reference but appearance stays photographic.",
+    "reference_denoise030_insufficient_style": "Stronger latent edit still insufficient anime styling; background distortions. Not accepted."
+  },
+  "audio": "No audio generated or mixed yet; sound pass deferred until valid motion.",
+  "next_step": {
+    "model": "Comfy-Org/Wan-2.1 wan2.1_vace_1.3B_fp16.safetensors",
+    "size_display": "4.31GB",
+    "sha256": "640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2",
+    "downloaded": false,
+    "authorization": "Pending explicit approval due earlier model-download limit",
+    "existing_support": "LocalComfyWanVaceToVideo present; existingUMT5/WanVAE reusable",
+    "planned_test": "17frames512x2883steps first, RTXUUIDprimary, GTXoptionalweightdonor, conservative memory/thermal monitoring; no full long render before gait/style QA"
+  }
+}
