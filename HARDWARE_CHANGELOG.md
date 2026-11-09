@@ -388,3 +388,11 @@ User said continuetomorrow. Cooperatively stopped53frame native480psampler; cont
 ## Resumed — 2026-11-09T10:50:56.247232-06:00
 
 Userexplicitlyresumed. RTX29C/170W,GTX25C/130W;noGPUcomputejobs. Restart53frame832x48030stepVACEanimewalkfromsavedseed/verifiedcontrolsinafreshjob/outputdirectory;preservepreviousstoppedattemptandSTOP. Existingapprovedmodelsizeverified,nodownload/re-encoding. KeepRTXUUIDprimary,1GiBGTXweightdonor,PyTorch/cacheoff,allmemory/thermal/timeguards. No driver/display/suspend/power/fan changes.
+
+### 2026-11-09 — Wan 2.2 Animate 14B feasibility and headless cleanup fix
+
+User authorized the larger-model setup. Installed the official-tutorial-linked scaled FP8 Animate 14B and three native supporting encoders (26.66GB total), pinned and SHA256 verified; original models retained. Native CPU text/vision/VAE conditioning, nine-frame 144x256 one-step RTX sampling, GTX+RAM donor sampling and native CPU decoding passed. This is an inference smoke, not training or a final quality render.
+
+Native RAM baseline: 9055MiB peak total RTX memory, 58C maximum monitored, 18.65s guarded stage. GTX+RAM: 6856MiB RTX and 2174MiB GTX, 62C, 21.85s. Identical finite latents, maximum difference zero. Donor saves primary memory but did not speed up this tiny test. Exact UUID mapping, 3GiB core reserve, independent memory/RAM/thermal guards; no driver, display, power or fan changes.
+
+The donor probe exposed absent `PromptServer.instance` during headless cache cleanup. Three cleanup functions now safely handle an uninitialized server. Added four CPU regression cases; all 47 CPU safety tests passed. Installed extension backed up before the fix. Core unchanged. Full two-person character replacement, full-resolution rendering and actual training remain unvalidated. See WAN_ANIMATE_14B.md and benchmarks/results/rtx3060-wan22-animate14b.json.

@@ -1,0 +1,77 @@
+{
+  "model": "Wan2.2 Animate 14B",
+  "checkpoint": "Wan2_2-Animate-14B_fp8_e4m3fn_scaled_KJ.safetensors",
+  "storage": "scaled FP8 with BF16 auxiliary tensors",
+  "compute": "native ComfyUI supported casting; no forced FP8 compute",
+  "purpose": "character animation and replacement",
+  "status": "tiny_smoke_passed_not_quality_validated",
+  "primary": {
+    "name": "RTX 3060",
+    "uuid": "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6",
+    "role": "compute and desktop",
+    "core_reserve_gib": 3.0
+  },
+  "optional_donor": {
+    "name": "GTX 1660",
+    "uuid": "GPU-888a542e-afbd-c60e-8458-28cadb4ce8ce",
+    "role": "weight storage only"
+  },
+  "ram_fallback": true,
+  "safety": {
+    "primary_total_memory_limit_mib": 9800,
+    "donor_total_memory_limit_mib": 4800,
+    "minimum_available_ram_gib": 8,
+    "thermal_pause_c": 75,
+    "thermal_resume_c": 67,
+    "thermal_stop_c": 82,
+    "stage_timeout_seconds": 900
+  },
+  "smoke_only": {
+    "width": 144,
+    "height": 256,
+    "frames": 9,
+    "steps": 1,
+    "cfg": 1.0,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "shift": 5.0,
+    "pose": "synthetic black",
+    "face": "synthetic gray",
+    "meaning": "execution check only; not a quality preset"
+  },
+  "training_ready": false,
+  "assets": [
+    {
+      "repo": "Kijai/WanVideo_comfy_fp8_scaled",
+      "revision": "033a4e487f60220b3d6e469599a6aebc46e13cee",
+      "path": "Wan22Animate/Wan2_2-Animate-14B_fp8_e4m3fn_scaled_KJ.safetensors",
+      "size": 18401760586,
+      "sha256": "2936b31473a967e7a429a6646bba60e7862d0938e178b58b2a140f391dd5b8e6"
+    },
+    {
+      "repo": "Comfy-Org/Wan-2.1",
+      "revision": "123acf1cc74bccbb9bfff8ac1ee72edc08c2341d",
+      "path": "split_files/clip_vision/clip_vision_h.safetensors",
+      "size": 1264219396,
+      "sha256": "64a7ef761bfccbadbaa3da77366aac4185a6c58fa5de5f589b42a65bcc21f161"
+    },
+    {
+      "repo": "Comfy-Org/Wan-2.1",
+      "revision": "123acf1cc74bccbb9bfff8ac1ee72edc08c2341d",
+      "path": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "size": 6735906897,
+      "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+    },
+    {
+      "repo": "Comfy-Org/Wan-2.2",
+      "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+      "path": "split_files/vae/wan_2.1_vae.safetensors",
+      "size": 253815318,
+      "sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
+    }
+  ],
+  "offload_allocation": "cuda:0,5gb;cuda:1,2gb;cpu,*",
+  "allocation_unit": "GiB",
+  "observed_compute_dtype": "float16 via native mixed precision ops",
+  "results": "../benchmarks/results/rtx3060-wan22-animate14b.json"
+}

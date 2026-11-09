@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-09",
+  "status": "tiny_smoke_passed_not_quality_validated",
+  "model": "Wan2.2 Animate 14B scaled FP8",
+  "core_commit": "0decb39ee5b5e17c200334589fc317dbbe98310e",
+  "driver": "595.99.02",
+  "assets_verified": 4,
+  "assets_bytes": 26655702197,
+  "native_cpu_conditioning": {
+    "purpose": "architecture and memory smoke only; no quality claim",
+    "device": "cpu",
+    "text_shape": [
+      1,
+      512,
+      4096
+    ],
+    "passed": true,
+    "finite": true,
+    "seconds": 62.85641484100006,
+    "width": 144,
+    "height": 256,
+    "frames": 9,
+    "trim_latent": 1,
+    "tensor_shapes": {
+      "positive": [
+        1,
+        512,
+        4096
+      ],
+      "negative": [
+        1,
+        512,
+        4096
+      ],
+      "clip_vision": [
+        1,
+        257,
+        1280
+      ],
+      "concat_latent_image": [
+        1,
+        16,
+        4,
+        32,
+        18
+      ],
+      "concat_mask": [
+        1,
+        4,
+        4,
+        32,
+        18
+      ],
+      "samples": [
+        1,
+        16,
+        4,
+        32,
+        18
+      ],
+      "pose_video_latent": [
+        1,
+        16,
+        3,
+        32,
+        18
+      ],
+      "face_video_pixels": [
+        1,
+        3,
+        9,
+        512,
+        512
+      ]
+    },
+    "pose_input": "synthetic black; architecture check only",
+    "face_input": "synthetic gray; architecture check only"
+  },
+  "ram_smoke": {
+    "purpose": "one-step smoke only; not a quality render or training",
+    "offload": "ram",
+    "primary_uuid": "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6",
+    "steps": 1,
+    "cfg": 1.0,
+    "width": 144,
+    "height": 256,
+    "frames": 9,
+    "detected_model": "WAN22_Animate",
+    "passed": true,
+    "finite": true,
+    "seconds": 11.998094906999995,
+    "sampling_seconds": 11.513864241999727,
+    "latent_shape": [
+      1,
+      16,
+      4,
+      32,
+      18
+    ],
+    "peak_allocated_bytes": 8167343616,
+    "cooling_seconds": 0.0,
+    "maximum_guard_temperature_c": 58,
+    "logical_parameter_bytes": {
+      "cpu": 20917673576,
+      "cuda:0": 13633454080
+    }
+  },
+  "gtx_smoke": {
+    "purpose": "one-step smoke only; not a quality render or training",
+    "offload": "gtx",
+    "primary_uuid": "GPU-d5ac3456-9f36-f11c-aee1-406ddc9332a6",
+    "steps": 1,
+    "cfg": 1.0,
+    "width": 144,
+    "height": 256,
+    "frames": 9,
+    "detected_model": "WAN22_Animate",
+    "passed": true,
+    "finite": true,
+    "seconds": 14.605837832999896,
+    "sampling_seconds": 13.376420275000328,
+    "latent_shape": [
+      1,
+      16,
+      4,
+      32,
+      18
+    ],
+    "logical_parameter_bytes": {
+      "cuda:0": 8990390888,
+      "cpu": 21276571648,
+      "cuda:1": 4284165120
+    },
+    "peak_allocated_bytes": 6212413952,
+    "cooling_seconds": 0.0,
+    "maximum_guard_temperature_c": 61
+  },
+  "ram_guard": {
+    "stage": "ram",
+    "passed": true,
+    "max_primary_mib": 9055,
+    "max_donor_mib": 2,
+    "max_gpu_c": 58,
+    "min_available_ram_bytes": 44704722944,
+    "timeout_seconds": 900,
+    "seconds": 18.653898854999625
+  },
+  "gtx_guard": {
+    "stage": "gtx",
+    "passed": true,
+    "max_primary_mib": 6856,
+    "max_donor_mib": 2174,
+    "max_gpu_c": 62,
+    "min_available_ram_bytes": 44387074048,
+    "timeout_seconds": 900,
+    "seconds": 21.852074390000325
+  },
+  "offload_comparison": {
+    "shape": [
+      1,
+      16,
+      4,
+      32,
+      18
+    ],
+    "bit_identical": true,
+    "max_absolute_difference": 0.0,
+    "rmse": 0.0,
+    "finite": true,
+    "note": "Matched one-step smoke; not a final video quality benchmark"
+  },
+  "native_cpu_decode": {
+    "device": "cpu",
+    "purpose": "decode finite smoke output; one step is not a usable quality render",
+    "passed": true,
+    "finite": true,
+    "shape": [
+      9,
+      256,
+      144,
+      3
+    ],
+    "seconds": 7.842696169000192
+  },
+  "standard_library_safety_tests_passed": 47,
+  "training_ready": false,
+  "full_quality_or_long_video_validated": false,
+  "core_or_driver_changes": false,
+  "power_fan_display_changes": false,
+  "initial_failures": [
+    "Harness initially omitted built-in node initialization; fixed harness, preserved failure logs.",
+    "Extension memory cleanup assumed PromptServer.instance exists; fixed three cleanup entry points and added four CPU regression cases."
+  ],
+  "allocation": "cuda:0,5gb;cuda:1,2gb;cpu,* (gb parsed as GiB)",
+  "limits": "Results apply only to 144x256, nine-frame, one-step CFG1 synthetic motion smoke; donor memory counters are logical parameter bytes, not physical storage. Physical peaks come from independent monitor."
+}

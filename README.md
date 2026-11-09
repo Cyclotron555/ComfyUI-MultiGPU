@@ -316,3 +316,5 @@ With deepest thanks to [City96](https://v100s.net/).
 Opt-in cooling diagnostics, temporary RTX fan/power tests, restoration requirements and a walking-human Wan recipe are documented in [WAN_PERFORMANCE.md](WAN_PERFORMANCE.md#cooling-experiments-and-direct-temperature-reads). Normal extension loading does not change fan or power settings.
 
 Experimental native VACE conditioning checks and the RTX3060/GTX1660 reference-control recipe are documented in [WAN_PERFORMANCE.md](WAN_PERFORMANCE.md#local-vace-reference-control-tests). Short motion/style tests remain experimental; no automatic model downloads or hardware tuning are added.
+
+Wan 2.2 Animate 14B: [tested RTX 3060/GTX 1660 setup and limits](WAN_ANIMATE_14B.md). Tiny native sampling and decode passed; full-quality character replacement and training remain unvalidated.
