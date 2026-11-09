@@ -401,3 +401,7 @@ The donor probe exposed absent `PromptServer.instance` during headless cache cle
 ## 2026-11-09 — preserve mapped offload weights
 
 DisTorch2 now places unmodified modules directly on their assigned device, preserving existing compute-device cast flags and skipping no-op transfers. CPU weights supplied as mapped tensors stay mapped instead of staging through CUDA and back. Patched or wrapped weights retain the previous staging path. A matched nine-frame/one-step fixture remained bit-identical (max absolute difference and RMSE zero), including a zero bias patch and identity weight wrapper. All existing 47 CPU tests passed. This validates placement behavior, not animation quality or a general speed gain. The original source was backed up before installation.
+
+## 2026-11-09 — isolate heavy Wan jobs
+
+Added standalone user-systemd launcher and worker limit verification under tools/. A fixed service name rejects concurrent jobs; plan-only is the default. Render limits for this 64GB RAM machine are 36GiB high / 40GiB maximum, zero swap and an 1800-second timeout, with group OOM termination. Preparation and downloads have lower caps. Workers must still monitor available RAM/pressure, total GPU memory and temperatures.53 CPU checks passed, including six new isolation/launcher tests. Live 128MiB maximum / 96MiB high / no-swap / OOM-group-1 verification passed; a second job was refused while an existing worker PID remained unchanged. No real power/fan changes occur in the mocked unit tests.
