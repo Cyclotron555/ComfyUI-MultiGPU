@@ -280,12 +280,24 @@ def register_patched_safetensor_modelpatcher():
                     mem_counter += module_size
                     continue
 
-                # Step 1: Write block/tensor to compute device first
-                module_object.to(device_to)
-
-                # Step 2: Apply LoRa patches while on compute device
                 weight_key = f"{module_name}.weight"
                 bias_key = f"{module_name}.bias"
+                block_target_device = device_assignments['block_assignments'].get(module_name, device_to)
+                has_patches = weight_key in self.patches or bias_key in self.patches
+                has_wrappers = weight_key in self.weight_wrapper_patches or bias_key in self.weight_wrapper_patches
+                if not has_patches and not has_wrappers:
+                    # Keep unmodified CPU weights mapped instead of copying them through CUDA.
+                    tensors = tuple(module_object.parameters(recurse=False)) + tuple(module_object.buffers(recurse=False))
+                    if not tensors or any(str(tensor.device) != str(block_target_device) for tensor in tensors):
+                        module_object.to(block_target_device)
+                    if str(block_target_device) != str(device_to):
+                        module_object.comfy_cast_weights = True
+                    module_object.comfy_patched_weights = True
+                    mem_counter += module_size
+                    continue
+
+                # Patched weights still stage on the compute device.
+                module_object.to(device_to)
 
                 if weight_key in self.patches:
                     self.patch_weight_to_device(weight_key, device_to=device_to)
@@ -298,8 +310,6 @@ def register_patched_safetensor_modelpatcher():
                     module_object.bias_function.extend(self.weight_wrapper_patches[bias_key])
 
                 # Step 3: FP8 casting for CPU storage (if enabled)
-                block_target_device = device_assignments['block_assignments'].get(module_name, device_to)
-                has_patches = weight_key in self.patches or bias_key in self.patches
 
                 if not high_precision_loras and block_target_device == "cpu" and has_patches and model_original_dtype in [torch.float8_e4m3fn, torch.float8_e5m2]:
                     for param_name, param in module_object.named_parameters():
